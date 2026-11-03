@@ -24,7 +24,7 @@ El encabezado y el pie se repiten en cada página (marcados con `<!-- header -->
 - Fondo blanco `#FFFFFF`; superficie `#F5F4F7`; fondo de foto `#E9E8EC`; líneas `#E4E2E8`.
 - Texto: tinta `#1F1D24`, cuerpo `#4A4752`, secundario `#6B6772`.
 - Morado de marca `#3B1E59` (hover `#2C1645`), usado como color **secundario**: botones, enlaces, detalles. Nunca como fondo de secciones.
-- Tipografía Archivo 400 y 600 (Google Fonts). Títulos en 400 con tracking negativo.
+- Tipografía (Google Fonts): Bricolage Grotesque 400 para títulos y DM Sans 400 y 600 para texto, botones y navegación. Títulos en 400 con tracking negativo.
 - Grilla de 12 columnas, margen lateral 5vw, gutter 24px. En celular (≤820px) 6 columnas.
 - Botones rectos: morado sólido, o "ghost" con borde de tinta.
 - Mucho espacio en blanco: separaciones de 160 a 200px entre secciones en escritorio, ~104px en celular.
