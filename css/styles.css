@@ -48,14 +48,14 @@ a{color:#3B1E59}a:hover{color:#1F1D24}
 .cv .hero .copy{grid-column:1/6;align-self:end;padding:48px 0 8px}
 .cv .hero .copy .lead{max-width:30ch}
 .cv .acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
-.cv .hero .big{grid-column:6/13;margin-top:-18px;aspect-ratio:16/10}
+.cv .hero .big{grid-column:6/13;margin-top:24px;aspect-ratio:16/10}
 .cv .hero .who{grid-column:1/13;display:flex;flex-wrap:wrap;gap:8px 40px;padding-top:28px;font-size:15px;color:var(--muted)}
 /* services */
 .cv .svc{padding-top:200px}
 .cv .svc .head{grid-column:1/10;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:end;margin-bottom:56px}
 .cv .svc .head .lead{max-width:36ch}
 .cv .band{display:flex;height:68svh;min-height:520px;max-height:720px}
-.cv .band a{position:relative;display:block;overflow:hidden;background:var(--photo);text-decoration:none;transition:flex-grow .6s var(--ease)}
+.cv .band a{position:relative;display:block;overflow:hidden;flex-basis:0;min-width:0;background:var(--photo);text-decoration:none;transition:flex-grow .6s var(--ease)}
 .cv .band a img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
 .cv .band a:hover{flex-grow:6!important}
 .cv .band a:hover img{transform:scale(1.03)}
