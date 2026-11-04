@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Pic from '../components/Pic.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
+import QuoteForm from '../components/QuoteForm.astro';
 import { site, waUrl, proyectoDestacado, etiquetasProyectos } from '../config/site';
 import kit from '../assets/img/kit.webp';
 import bottles from '../assets/img/bottles.webp';
@@ -141,17 +142,6 @@ const articulos = [
         </div>
       )
     }
-    {
-      site.email && (
-        <form class="quote-form" data-quote-form data-email={site.email} novalidate aria-labelledby="h-form">
-          <h3 id="h-form">Solicitar cotización</h3>
-          <div class="f"><label for="c-n">Nombre</label><input id="c-n" required type="text" autocomplete="name" name="nombre" /></div>
-          <div class="f"><label for="c-e">Correo</label><input id="c-e" type="email" autocomplete="email" name="correo" /></div>
-          <div class="f full"><label for="c-w">WhatsApp</label><input id="c-w" type="tel" autocomplete="tel" placeholder="+56 9" name="whatsapp" /></div>
-          <div class="f full"><label for="c-q">¿Qué necesitas?</label><textarea id="c-q" placeholder="Por ejemplo: 150 kits de bienvenida para marzo, o una idea para el aniversario de la empresa." name="necesidad"></textarea></div>
-          <div class="send"><button class="btn" type="submit">Enviar solicitud</button></div>
-        </form>
-      )
-    }
+    <QuoteForm prefix="c" headingId="h-form" level={3} />
   </section>
 </Base>

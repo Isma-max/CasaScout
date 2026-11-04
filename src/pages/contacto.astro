@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
+import QuoteForm from '../components/QuoteForm.astro';
 import { site, waUrl } from '../config/site';
 ---
 
@@ -32,18 +33,12 @@ import { site, waUrl } from '../config/site';
         </div>
       )
     }
-    {
-      site.email && (
-        <form class="quote-form rv2" data-quote-form data-email={site.email} novalidate aria-labelledby="c-form">
-          <h2 id="c-form">Solicitar cotización</h2>
-          <p class="intro">Te respondemos con una propuesta.{site.plazoRespuesta && ` ${site.plazoRespuesta}`}</p>
-          <div class="f"><label for="k-n">Nombre</label><input id="k-n" required type="text" autocomplete="name" name="nombre" /></div>
-          <div class="f"><label for="k-e">Correo</label><input id="k-e" type="email" autocomplete="email" name="correo" /></div>
-          <div class="f full"><label for="k-w">WhatsApp</label><input id="k-w" type="tel" autocomplete="tel" placeholder="+56 9" name="whatsapp" /></div>
-          <div class="f full"><label for="k-q">¿Qué necesitas?</label><textarea id="k-q" placeholder="Por ejemplo: 150 kits de bienvenida para marzo, o una idea para el aniversario de la empresa." name="necesidad"></textarea></div>
-          <div class="send"><button class="btn" type="submit">Enviar solicitud</button></div>
-        </form>
-      )
-    }
+    <QuoteForm
+      prefix="k"
+      headingId="c-form"
+      level={2}
+      class="rv2"
+      intro={`Te respondemos con una propuesta.${site.plazoRespuesta ? ` ${site.plazoRespuesta}` : ''}`}
+    />
   </section>
 </Base>

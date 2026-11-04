@@ -1,0 +1,63 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../config/site';
+
+const contacto = site.email
+  ? `Para ejercerlos, escríbenos a ${site.email}.`
+  : 'Para ejercerlos, escríbenos por los medios de contacto de este sitio.';
+---
+
+<Base
+  title="Política de privacidad · Casa Scout"
+  description="Cómo usa Casa Scout los datos que envías por el formulario de cotización: qué recopilamos, para qué, con quién y cuáles son tus derechos."
+  pageClass="pg-privacidad"
+>
+  <section class="top grid" aria-labelledby="pv-h1">
+    <h1 id="pv-h1">Política de privacidad</h1>
+    <p class="lead">Cómo usamos los datos que nos envías por el formulario de cotización.</p>
+  </section>
+
+  <section class="doc grid" aria-label="Detalle de la política">
+    <h2 class="rv">Quién es responsable</h2>
+    <div class="t rv2">
+      <p>Casa Scout es responsable del tratamiento de los datos personales que nos envías a través de los formularios de cotización de este sitio.</p>
+    </div>
+
+    <h2 class="rv">Qué datos recopilamos</h2>
+    <div class="t rv2">
+      <p>Solo los que escribes en el formulario:</p>
+      <ul>
+        <li>Tu nombre.</li>
+        <li>Tu correo, tu número de WhatsApp, o ambos.</li>
+        <li>El mensaje con lo que necesitas.</li>
+      </ul>
+      <p>También registramos la página desde la que escribiste. No te pedimos datos sensibles; te pedimos que no los incluyas en el mensaje. Este sitio no usa cookies de seguimiento ni herramientas de analítica.</p>
+    </div>
+
+    <h2 class="rv">Para qué los usamos</h2>
+    <div class="t rv2">
+      <p>Para responder tu solicitud, preparar una propuesta y contactarte por correo o WhatsApp sobre ella. No los vendemos ni los usamos para otros fines.</p>
+    </div>
+
+    <h2 class="rv">Con quién los compartimos</h2>
+    <div class="t rv2">
+      <p>El formulario funciona con Web3Forms, un servicio externo que recibe el envío y lo reenvía al correo de Casa Scout. Ese proveedor puede procesar los datos en servidores fuera de Chile. No los compartimos con otras personas o empresas, salvo que la ley lo exija.</p>
+    </div>
+
+    <h2 class="rv">Cuánto tiempo los conservamos</h2>
+    <div class="t rv2">
+      <p>Mientras sea necesario para atender tu solicitud y la relación comercial que surja, y por los plazos que exija la ley. Después los eliminamos.</p>
+    </div>
+
+    <h2 class="rv">Tus derechos</h2>
+    <div class="t rv2">
+      <p>Puedes pedir acceder a tus datos, corregirlos, eliminarlos u oponerte a su uso, conforme a la normativa chilena de protección de datos personales (Ley N° 19.628 y sus modificaciones). {contacto}</p>
+    </div>
+
+    <h2 class="rv">Cambios a esta política</h2>
+    <div class="t rv2">
+      <p>Podemos actualizarla. Siempre indicaremos aquí la fecha de la última versión.</p>
+      <p class="small">Última actualización: noviembre de 2026.</p>
+    </div>
+  </section>
+</Base>

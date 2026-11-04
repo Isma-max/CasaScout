@@ -3,3 +3,6 @@ dist/
 dist-demo/
 .astro/
 .DS_Store
+.env
+.env.*
+!.env.example

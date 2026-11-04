@@ -13,11 +13,12 @@ src/pages/que-hacemos.astro            Servicios y productos destacados
 src/pages/clientes-y-proyectos.astro   Logos de clientes, proyecto destacado, grilla filtrable
 src/pages/blog.astro                   Artículo destacado y lista filtrable (temas pensados para SEO)
 src/pages/contacto.astro               WhatsApp + formulario de cotización
+src/pages/privacidad.astro             Política de privacidad (enlazada desde el formulario y el pie)
 src/layouts/Base.astro                 Layout base: title, description, pageClass; incluye encabezado, pie, fuentes y JS
-src/components/                        Header, Footer, WhatsAppButton, Pic (envoltorio de <Image>)
+src/components/                        Header, Footer, WhatsAppButton, QuoteForm, Pic (envoltorio de <Image>)
 src/config/site.ts                     Datos pendientes (WhatsApp, correo, horario, ciudad, redes, zonas, plazo, logos)
 src/styles/global.css                  Hoja única: base y tokens en .cv, luego un bloque por página (.pg-*)
-src/scripts/main.js                    Filtros por categoría y envío del formulario
+src/scripts/main.js                    Filtros por categoría y formulario de cotización (Web3Forms)
 src/assets/                            Logo (SVG) e imágenes (WebP); Astro las optimiza con <Image>
 public/favicon.svg                     Favicon
 docs/                                  Brief del producto y presentación aprobada
@@ -32,7 +33,8 @@ Comandos: `npm install`, `npm run dev`, `npm run build` (genera `dist/`), `npm r
 Todos los datos pendientes viven en `src/config/site.ts` y están **vacíos**. Si un dato está vacío, el elemento que lo usa no se muestra y no queda ningún texto entre corchetes en el sitio:
 
 - `whatsapp`: botones de WhatsApp (inicio, llamados a la acción, contacto) y enlace del pie.
-- `email`: formulario de cotización (Inicio y Contacto), correo en el pie y en Contacto.
+- `email`: correo en el pie, en Contacto y en la política de privacidad; también se ofrece como alternativa si falla el envío del formulario.
+- `PUBLIC_WEB3FORMS_KEY` (variable de entorno, no está en `site.ts`): formulario de cotización (Inicio y Contacto). Sin clave, el formulario no se muestra.
 - `horario`, `ciudad`: filas de Contacto, pie y texto del bloque de WhatsApp.
 - `instagram`, `linkedin`: bloque "Redes" del pie.
 - `zonasDespacho`: frase final del paso "Entregamos" en Somos.
@@ -52,6 +54,10 @@ Para agregar un dato nuevo, ocúltalo cuando esté vacío con la misma lógica (
 - Botones rectos: morado sólido, o "ghost" con borde de tinta.
 - Mucho espacio en blanco: separaciones de 160 a 200px entre secciones en escritorio, ~104px en celular.
 - Todos los tokens están como variables CSS en `.cv` al inicio de `src/styles/global.css`.
+
+## Formulario de cotización
+
+`QuoteForm.astro` + `src/scripts/main.js`, conectado a Web3Forms con la clave en `PUBLIC_WEB3FORMS_KEY` (ver `.env.example`). Mantén: honeypot `botcheck`, errores por campo asociados con `aria-describedby` y `aria-invalid`, foco en el primer error, confirmación en la misma página sin recargar, aviso de error con reintento, y el enlace a `privacidad.html`. Los avisos de error usan `#B3261E` (única excepción a la paleta, por contraste AA).
 
 ## Lo que NO se agrega
 

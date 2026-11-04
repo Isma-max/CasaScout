@@ -1,0 +1,87 @@
+---
+/**
+ * Formulario de cotización (Inicio y Contacto), conectado a Web3Forms.
+ * La clave pública va en la variable de entorno PUBLIC_WEB3FORMS_KEY.
+ * Sin clave, el formulario no se muestra (modo publicable).
+ * El comportamiento está en src/scripts/main.js ([data-quote-form]).
+ */
+import { site } from '../config/site';
+
+interface Props {
+  /** Prefijo de los ids de los campos (evita ids repetidos si hubiera dos formularios). */
+  prefix: string;
+  /** Id del título, usado por aria-labelledby. */
+  headingId: string;
+  /** Nivel del título: 2 en Contacto, 3 en Inicio. */
+  level?: 2 | 3;
+  /** Texto bajo el título (opcional). */
+  intro?: string;
+  /** Clases extra del <form> (por ejemplo "rv2"). */
+  class?: string;
+}
+
+const { prefix, headingId, level = 3, intro, class: extra = '' } = Astro.props;
+const key = import.meta.env.PUBLIC_WEB3FORMS_KEY;
+const Heading = `h${level}` as 'h2' | 'h3';
+const p = (s: string) => `${prefix}-${s}`;
+---
+
+{
+  key && (
+    <form
+      class={`quote-form ${extra}`.trim()}
+      data-quote-form
+      data-key={key}
+      data-fallback-email={site.email || undefined}
+      novalidate
+      aria-labelledby={headingId}
+    >
+      <Heading id={headingId}>Solicitar cotización</Heading>
+      {intro && <p class="intro">{intro}</p>}
+
+      <div class="form-fields" data-fields>
+        <div class="f">
+          <label for={p('n')}>Nombre</label>
+          <input id={p('n')} required type="text" autocomplete="name" name="nombre" aria-describedby={p('n-err')} />
+          <p class="f-err" id={p('n-err')} hidden />
+        </div>
+        <div class="f">
+          <label for={p('e')}>Correo</label>
+          <input id={p('e')} type="email" autocomplete="email" name="correo" aria-describedby={p('e-err')} />
+          <p class="f-err" id={p('e-err')} hidden />
+        </div>
+        <div class="f full">
+          <label for={p('w')}>WhatsApp</label>
+          <input id={p('w')} type="tel" autocomplete="tel" placeholder="+56 9" name="whatsapp" aria-describedby={p('w-err')} />
+          <p class="f-err" id={p('w-err')} hidden />
+        </div>
+        <div class="f full">
+          <label for={p('q')}>¿Qué necesitas?</label>
+          <textarea
+            id={p('q')}
+            required
+            placeholder="Por ejemplo: 150 kits de bienvenida para marzo, o una idea para el aniversario de la empresa."
+            name="necesidad"
+            aria-describedby={p('q-err')}
+          ></textarea>
+          <p class="f-err" id={p('q-err')} hidden />
+        </div>
+
+        <!-- Honeypot: las personas no lo ven ni lo alcanzan con el teclado; los bots suelen marcarlo. -->
+        <div class="hp" aria-hidden="true">
+          <label>No marcar este campo <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <p class="small priv">Al enviar, aceptas que usemos estos datos para responder tu solicitud. Más información en la <a href="privacidad.html">política de privacidad</a>.</p>
+        <div class="send"><button class="btn" type="submit">Enviar solicitud</button></div>
+      </div>
+
+      <p class="form-msg form-fail" data-fail role="alert" hidden></p>
+      <div class="form-msg form-ok" data-ok role="status" tabindex="-1" hidden>
+        <p><b>¡Listo, recibimos tu solicitud!</b></p>
+        <p>Te responderemos a la brevedad con una propuesta.</p>
+        <button class="btn ghost" type="button" data-again>Enviar otra solicitud</button>
+      </div>
+    </form>
+  )
+}

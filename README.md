@@ -15,9 +15,9 @@ Requiere Node 22.23 o superior.
 
 ## Estructura
 
-- `src/pages/`: las seis páginas.
+- `src/pages/`: las seis páginas y `privacidad.astro` (política de privacidad).
 - `src/layouts/Base.astro`: layout base (`title`, `description`, `pageClass`), con encabezado, pie, fuentes y JS.
-- `src/components/`: `Header`, `Footer`, `WhatsAppButton` y `Pic` (envoltorio de `<Image>`).
+- `src/components/`: `Header`, `Footer`, `WhatsAppButton`, `QuoteForm` (formulario de cotización) y `Pic` (envoltorio de `<Image>`).
 - `src/config/site.ts`: datos pendientes (ver abajo).
 - `src/styles/global.css`: hoja de estilos única.
 - `src/assets/`: logo e imágenes (se procesan a WebP con anchos responsivos).
@@ -28,9 +28,9 @@ Las fuentes (Bricolage Grotesque y DM Sans) están autoalojadas con `@fontsource
 
 Todos los datos que faltan están en [`src/config/site.ts`](src/config/site.ts) y hoy están **vacíos**: `whatsapp`, `email`, `horario`, `ciudad`, `instagram`, `linkedin`, `zonasDespacho`, `plazoRespuesta`, `logos`, además de `proyectoDestacado` y `etiquetasProyectos`.
 
-Si un dato está vacío, su elemento no se muestra (fila de horario, bloque de redes, grilla de logos, botones de WhatsApp, formulario) y no queda ningún texto entre corchetes. Al completar un valor, el elemento aparece solo.
+Si un dato está vacío, su elemento no se muestra (fila de horario, bloque de redes, grilla de logos, botones de WhatsApp) y no queda ningún texto entre corchetes. Al completar un valor, el elemento aparece solo.
 
-Ojo: sin `email` no se muestra el formulario de cotización, y sin `whatsapp` no se muestra la tarjeta "Por WhatsApp". Con ambos vacíos, Contacto queda sin forma de contacto; completa al menos uno antes de publicar.
+Ojo: sin `whatsapp` no se muestra la tarjeta "Por WhatsApp", y sin la clave de Web3Forms (ver abajo) no se muestra el formulario de cotización. Con ambos vacíos, Contacto queda sin forma de contacto; completa al menos uno antes de publicar.
 
 ## Estado
 
@@ -44,12 +44,26 @@ Ojo: sin `email` no se muestra el formulario de cotización, y sin `whatsapp` no
 3. Proyecto destacado real: cliente, contexto y escala (`proyectoDestacado`).
 4. Proyectos reales para la grilla de Clientes y proyectos.
 5. Zonas de despacho y plazo de respuesta.
-6. Conectar el formulario a un servicio real. Hoy abre el correo del visitante con el mensaje ya armado.
+6. Crear la cuenta de Web3Forms con el correo de Casa Scout y cargar la clave (ver abajo).
 7. Redactar los artículos del blog. Los títulos actuales son propuestas para SEO.
 8. Metadatos para compartir en redes (Open Graph), `sitemap.xml` y `robots.txt`.
 
+## Formulario de cotización (Web3Forms)
+
+El formulario de Inicio y Contacto (`src/components/QuoteForm.astro`, lógica en `src/scripts/main.js`) envía a [Web3Forms](https://web3forms.com):
+
+1. Crea una clave de acceso en Web3Forms con el correo donde Casa Scout recibirá las solicitudes.
+2. Defínela en la variable de entorno `PUBLIC_WEB3FORMS_KEY`:
+   - En local: copia `.env.example` a `.env` y completa el valor.
+   - En Vercel: Settings → Environment Variables (Production y Preview) y vuelve a desplegar. La variable se incorpora en el build.
+3. Sin clave, el formulario no se muestra. La clave de Web3Forms es pública por diseño (viaja en el navegador).
+
+Incluye honeypot (`botcheck`), validación accesible (errores asociados a cada campo con `aria-describedby`, `aria-invalid`, foco en el primer error), confirmación en la misma página sin recargar y aviso de error con reintento. Se exige nombre, mensaje, y correo o WhatsApp.
+
+La política de privacidad está en `src/pages/privacidad.astro`, enlazada desde el formulario y el pie. Es un texto breve de partida: conviene que la revise una persona del área legal antes de publicar, y ajustarla si cambian el proveedor del formulario, el uso de analítica o los plazos de conservación.
+
 ## Publicación (Vercel)
 
-El proyecto debe usar el preset **Astro**, con comando de build `npm run build` y directorio de salida `dist`.
+El proyecto debe usar el preset **Astro**, con comando de build `npm run build` y directorio de salida `dist`, y la variable `PUBLIC_WEB3FORMS_KEY` definida.
 
 Las reglas de diseño y lo que no se debe agregar están en [`AGENTS.md`](AGENTS.md). El brief completo está en [`docs/brief.md`](docs/brief.md).
