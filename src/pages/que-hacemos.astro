@@ -1,0 +1,122 @@
+---
+import Base from '../layouts/Base.astro';
+import Pic from '../components/Pic.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import bottles from '../assets/img/bottles.webp';
+import desk from '../assets/img/desk.webp';
+import kit from '../assets/img/kit.webp';
+import pins from '../assets/img/pins.webp';
+import tote from '../assets/img/p-tote.webp';
+import bottleNavy from '../assets/img/p-bottle-navy.webp';
+import mug from '../assets/img/p-mug.webp';
+import notebook from '../assets/img/p-notebook.webp';
+import tumbler from '../assets/img/p-tumbler.webp';
+import keychain from '../assets/img/p-keychain.webp';
+import badge from '../assets/img/p-badge.webp';
+import kitbox from '../assets/img/p-kitbox.webp';
+
+const servicios = [
+  {
+    id: 'merch', row: 'r1', hid: 'q-m', titulo: 'Merchandising', src: bottles,
+    alt: 'Botellas térmicas en cuatro colores con el logo de un cliente',
+    texto: 'Productos de calidad marcados con tu logo, para eventos, equipos y campañas.',
+    items: ['Textiles, botellas, tazas, libretas y más', 'Serigrafía, bordado, grabado láser o impresión', 'Desde pocas unidades hasta grandes volúmenes'],
+    cta: 'Cotizar merchandising', sizes: '(max-width: 820px) 100vw, 58vw', pos: undefined,
+  },
+  {
+    id: 'regalos', row: 'r2', hid: 'q-r', titulo: 'Regalos corporativos', src: desk,
+    alt: 'Libreta, lápices y pin personalizados',
+    texto: 'Regalos para clientes, equipos y fechas especiales, elegidos para que se usen y se recuerden.',
+    items: ['Fin de año, aniversarios y reconocimientos', 'Presentación y empaque a la medida', 'Entrega coordinada, también a varias direcciones'],
+    cta: 'Cotizar regalos', sizes: '(max-width: 820px) 100vw, 58vw', pos: undefined,
+  },
+  {
+    id: 'kits', row: 'r3', hid: 'q-k', titulo: 'Kits de bienvenida', src: kit,
+    alt: 'Kit de bienvenida abierto',
+    texto: 'Una caja propia para recibir a cada persona nueva y hacerla sentir parte desde el primer día.',
+    items: ['Selección de productos según tu presupuesto', 'Caja y tarjeta con tu identidad', 'Armado y despacho incluidos'],
+    cta: 'Armar un kit', sizes: '(max-width: 820px) 100vw, 50vw', pos: 'object-position:70% 50%',
+  },
+  {
+    id: 'proyectos-p', row: 'r4', hid: 'q-p', titulo: 'Proyectos personalizados', src: pins,
+    alt: 'Pins esmaltados de distintas formas',
+    texto: 'Cuando lo que necesitas no está en un catálogo, lo diseñamos y producimos desde cero.',
+    items: ['Pins, insignias y piezas con forma propia', 'Desarrollo de la idea y prototipo', 'Producción a la escala que necesites'],
+    cta: 'Contar mi idea', sizes: '(max-width: 820px) 100vw, 50vw', pos: undefined,
+  },
+];
+// En r1 y r3 la foto va primero; en r2 y r4, el texto.
+const fotoPrimero = (row: string) => row === 'r1' || row === 'r3';
+
+const productos = [
+  { src: tote, alt: 'Bolsa de algodón con logo', n: 'Bolsa de algodón', t: 'Serigrafía' },
+  { src: bottleNavy, alt: 'Botella térmica con logo', n: 'Botella térmica', t: 'Grabado láser' },
+  { src: mug, alt: 'Taza cerámica con logo', n: 'Taza cerámica', t: 'Impresión a todo color' },
+  { src: notebook, alt: 'Libreta tapa dura con logo', n: 'Libreta tapa dura', t: 'Logo en la tapa' },
+  { src: tumbler, alt: 'Vaso térmico con logo', n: 'Vaso térmico', t: 'Impresión UV' },
+  { src: keychain, alt: 'Llavero acrílico con logo', n: 'Llavero acrílico', t: 'Forma propia' },
+  { src: badge, alt: 'Chapita con logo', n: 'Chapita', t: 'Metálica' },
+  { src: kitbox, alt: 'Caja de regalo con faja y logo', n: 'Caja de regalo', t: 'Faja impresa' },
+];
+---
+
+<Base
+  title="Qué hacemos · Casa Scout"
+  description="Merchandising, regalos corporativos, kits de bienvenida y proyectos personalizados. Desde un producto con tu logo hasta una solución completa."
+  pageClass="pg-quehacemos"
+  current="que-hacemos"
+>
+  <section class="top grid" aria-labelledby="q-h1">
+    <h1 id="q-h1">Qué hacemos</h1>
+    <p class="lead">Desde un producto con tu logo hasta una solución completa para tu organización.</p>
+    <nav class="jump" aria-label="Servicios"><a href="#merch">Merchandising</a><a href="#regalos">Regalos corporativos</a><a href="#kits">Kits de bienvenida</a><a href="#proyectos-p">Proyectos personalizados</a></nav>
+  </section>
+
+  {
+    servicios.map((s, i) => {
+      const foto = (
+        <figure class={`ph ${i % 2 === 0 ? 'rv' : 'rv2'}`}>
+          <Pic src={s.src} alt={s.alt} sizes={s.sizes} style={s.pos} />
+          <span class="tag">Render provisional</span>
+        </figure>
+      );
+      const texto = (
+        <div class={`t ${i % 2 === 0 ? 'rv2' : 'rv'}`}>
+          <h2 id={s.hid}>{s.titulo}</h2>
+          <p>{s.texto}</p>
+          <ul>{s.items.map((it) => <li>{it}</li>)}</ul>
+          <a class="link" href="contacto.html"><span>{s.cta}</span> →</a>
+        </div>
+      );
+      return (
+        <section class={`svc-row ${s.row} grid`} id={s.id} aria-labelledby={s.hid}>
+          {fotoPrimero(s.row) ? <>{foto}{texto}</> : <>{texto}{foto}</>}
+        </section>
+      );
+    })
+  }
+
+  <section class="prods grid" aria-labelledby="q-prods">
+    <div class="h rv"><h2 id="q-prods">Productos destacados</h2><p class="lead">Una selección de lo que más nos piden. Te ayudamos a elegir según tu objetivo y presupuesto.</p></div>
+    <div class="pgrid rv2">
+      {
+        productos.map((p) => (
+          <figure>
+            <div class="ph"><Pic src={p.src} alt={p.alt} sizes="(max-width: 820px) 50vw, 23vw" /></div>
+            <figcaption>{p.n}<span>{p.t}</span></figcaption>
+          </figure>
+        ))
+      }
+    </div>
+    <p class="note small">Imágenes: renders provisionales con un cliente ficticio.</p>
+  </section>
+
+  <section class="cta grid" aria-labelledby="q-cta">
+    <h2 id="q-cta" class="rv">¿No sabes qué elegir?</h2>
+    <p class="lead rv">Cuéntanos para qué es y te proponemos opciones.</p>
+    <div class="acts rv2">
+      <a class="btn" href="contacto.html">Solicitar cotización</a>
+      <WhatsAppButton ghost label="Conversar por WhatsApp" />
+    </div>
+  </section>
+</Base>

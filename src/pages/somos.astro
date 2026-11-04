@@ -1,0 +1,73 @@
+---
+import Base from '../layouts/Base.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import logo from '../assets/logo-casa-scout.svg';
+import { site, waUrl } from '../config/site';
+
+const pasos = [
+  { t: 'Conversamos', d: 'Nos cuentas qué necesitas, para quién es, cuántas unidades y para cuándo. Una idea a medias basta.' },
+  { t: 'Proponemos', d: 'Te enviamos opciones de productos o una propuesta completa, con valores y plazos.' },
+  { t: 'Aprobamos juntos', d: 'Revisas cómo queda tu logo o la muestra del producto antes de producir.' },
+  { t: 'Producimos', d: 'Fabricamos y marcamos cada pieza, cuidando la calidad de principio a fin.' },
+  { t: 'Entregamos', d: `Llegamos en la fecha acordada y donde lo necesites.${site.zonasDespacho ? ` ${site.zonasDespacho}` : ''}` },
+];
+const valores = [
+  { t: 'Siempre listos', d: 'Planificamos con tiempo para cumplir los plazos, también cuando el pedido es urgente.' },
+  { t: 'Cercanía', d: 'Un equipo pequeño que responde rápido y conoce cada proyecto.' },
+  { t: 'Calidad', d: 'Elegimos productos que la gente quiera usar y que representen bien a tu organización.' },
+  { t: 'Ideas propias', d: 'Si el catálogo no alcanza, proponemos y desarrollamos una solución a medida.' },
+];
+---
+
+<Base
+  title="Somos · Casa Scout"
+  description="Un equipo creativo pequeño, nacido del movimiento scout, que diseña y produce merchandising y regalos corporativos."
+  pageClass="pg-somos"
+  current="somos"
+>
+  <section class="top grid" aria-labelledby="s-h1">
+    <h1 id="s-h1">Un equipo pequeño para proyectos grandes</h1>
+    <p class="lead">Somos un equipo creativo de pocas personas. Eso significa que hablas directamente con quienes piensan, producen y entregan tu proyecto.</p>
+    <figure class="team" style="margin:0"><span>Espacio para foto del equipo o del taller</span></figure>
+  </section>
+
+  <section class="story grid" aria-labelledby="s-story">
+    <h2 id="s-story" class="rv">Nuestra historia</h2>
+    <div class="txt rv2">
+      <p>Casa Scout nació de nuestra experiencia como voluntarios en el movimiento scout.</p>
+      <p>Ahí aprendimos a organizar equipos, a planificar con anticipación y a cumplir lo que prometemos. También descubrimos el valor de los objetos que identifican a un grupo: una insignia, un pañuelo o un recuerdo de campamento pueden decir mucho de quiénes somos.</p>
+      <p>Con el tiempo empezaron a llegarnos pedidos de regalos corporativos y de merchandising para instituciones. Los atendimos con el mismo compromiso, y lo que partió como encargos puntuales se transformó en nuestro trabajo de todos los días.</p>
+    </div>
+  </section>
+
+  <section class="name grid" aria-labelledby="s-name">
+    <div class="logo rv"><img src={logo.src} alt="Logo de Casa Scout: una casa con una flor de lis" /></div>
+    <div class="t rv2">
+      <h2 id="s-name">Por qué Casa Scout</h2>
+      <p>La flor de lis viene de donde partimos: el escultismo, sus valores y su forma de trabajar en equipo. La casa es el lugar donde se reúnen las personas y donde se cuida lo que importa.</p>
+      <p>Así queremos que se sienta trabajar con nosotros: cercano, ordenado y con la confianza de que lo acordado se cumple.</p>
+    </div>
+  </section>
+
+  <section class="how grid" aria-labelledby="s-how">
+    <div class="h rv"><h2 id="s-how">Cómo trabajamos</h2><p class="lead">El mismo camino para un pedido de catálogo o para un proyecto que parte desde cero.</p></div>
+    <ol class="steps rv2">
+      {pasos.map((p) => <li><h3>{p.t}</h3><p>{p.d}</p></li>)}
+    </ol>
+  </section>
+
+  <section class="vals grid" aria-labelledby="s-vals">
+    <h2 id="s-vals" class="rv">Lo que nos importa</h2>
+    <dl class="rv2">
+      {valores.map((v) => <><dt>{v.t}</dt><dd>{v.d}</dd></>)}
+    </dl>
+  </section>
+
+  <section class="cta grid" aria-labelledby="s-cta">
+    <h2 id="s-cta" class="rv">¿Tienes un proyecto en mente?</h2>
+    <div class="acts rv2">
+      <a class="btn" href="contacto.html">Solicitar cotización</a>
+      <WhatsAppButton ghost label="Conversar por WhatsApp" />
+    </div>
+  </section>
+</Base>

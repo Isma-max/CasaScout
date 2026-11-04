@@ -1,8 +1,6 @@
 // Casa Scout · comportamiento del sitio (JavaScript simple, sin dependencias)
 
-// [Pendiente] Datos de contacto reales. Al cambiarlos aquí, cambia también
-// los enlaces https://wa.me/[número] y el texto [Correo de contacto] en el HTML.
-const CONTACT_EMAIL = '[correo]';
+// El correo de destino viene de src/config/site.ts (atributo data-email del formulario).
 
 // Filtros por categoría (Clientes y proyectos, Blog)
 document.querySelectorAll('[data-filter-list]').forEach((list) => {
@@ -21,7 +19,7 @@ document.querySelectorAll('[data-filter-list]').forEach((list) => {
 
 // Formulario de cotización (Inicio y Contacto).
 // Por ahora abre el correo del visitante con el mensaje armado.
-// [Pendiente] Conectar a un servicio de formularios o a un backend.
+// Para enviar a un servicio de formularios o a un backend, reemplazar el mailto de abajo.
 document.querySelectorAll('[data-quote-form]').forEach((form) => {
   form.addEventListener('submit', (ev) => {
     ev.preventDefault();
@@ -36,7 +34,7 @@ document.querySelectorAll('[data-quote-form]').forEach((form) => {
       '\nWhatsApp: ' + (data.get('whatsapp') || '') +
       '\n\n' + (data.get('necesidad') || '');
     const subject = 'Solicitud de cotización · ' + nombre;
-    window.location.href = 'mailto:' + CONTACT_EMAIL +
+    window.location.href = 'mailto:' + (form.dataset.email || '') +
       '?subject=' + encodeURIComponent(subject) +
       '&body=' + encodeURIComponent(body);
   });

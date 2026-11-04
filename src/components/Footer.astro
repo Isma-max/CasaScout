@@ -1,0 +1,44 @@
+---
+import logo from '../assets/logo-casa-scout.svg';
+import bottles from '../assets/img/bottles.webp';
+import Pic from './Pic.astro';
+import { site, waUrl } from '../config/site';
+
+const hayContacto = Boolean(waUrl || site.email || site.ciudad);
+const hayRedes = Boolean(site.instagram || site.linkedin);
+---
+
+<footer class="foot" id="menu">
+  <figure class="ph"><Pic src={bottles} alt="" sizes="(max-width: 820px) 100vw, 50vw" /></figure>
+  <div class="right">
+    <img class="logo" src={logo.src} alt="Casa Scout" />
+    <nav aria-label="Pie de página">
+      <a href="somos.html">Somos</a><a href="que-hacemos.html">Qué hacemos</a><a href="clientes-y-proyectos.html">Clientes y proyectos</a><a href="blog.html">Blog</a><a href="contacto.html">Contacto</a>
+    </nav>
+    {
+      (hayContacto || hayRedes) && (
+        <div class="blocks">
+          {hayContacto && (
+            <div>
+              <b>Contacto</b>
+              {waUrl && <a href={waUrl}>WhatsApp</a>}
+              {waUrl && (site.email || site.ciudad) && <br />}
+              {site.email && <a href={`mailto:${site.email}`}>{site.email}</a>}
+              {site.email && site.ciudad && <br />}
+              {site.ciudad}
+            </div>
+          )}
+          {hayRedes && (
+            <div>
+              <b>Redes</b>
+              {site.instagram && <a href={site.instagram}>Instagram</a>}
+              {site.instagram && site.linkedin && <br />}
+              {site.linkedin && <a href={site.linkedin}>LinkedIn</a>}
+            </div>
+          )}
+        </div>
+      )
+    }
+    <p class="legal">© Casa Scout. Imágenes: renders provisionales hechos para esta propuesta; "Norte" es un cliente ficticio.</p>
+  </div>
+</footer>

@@ -1,0 +1,32 @@
+---
+import logo from '../assets/logo-casa-scout.svg';
+
+interface Props {
+  /** Página actual, para marcar aria-current en el menú. */
+  current?: 'somos' | 'que-hacemos' | 'clientes-y-proyectos' | 'blog' | 'contacto';
+}
+
+const { current } = Astro.props;
+const links = [
+  { id: 'somos', label: 'Somos' },
+  { id: 'que-hacemos', label: 'Qué hacemos' },
+  { id: 'clientes-y-proyectos', label: 'Clientes y proyectos' },
+  { id: 'blog', label: 'Blog' },
+  { id: 'contacto', label: 'Contacto' },
+];
+---
+
+<header class="bar">
+  <a class="home" href="index.html" aria-label="Casa Scout, inicio"><img src={logo.src} alt="" /></a>
+  <nav class="nav" aria-label="Principal">
+    {
+      links.map((l) => (
+        <a class="hide" href={`${l.id}.html`} aria-current={current === l.id ? 'page' : undefined}>
+          {l.label}
+        </a>
+      ))
+    }
+    <a class="btn" href="contacto.html">Cotizar</a>
+    <a class="menu" href="#menu">Menú</a>
+  </nav>
+</header>

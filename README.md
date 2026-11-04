@@ -1,15 +1,36 @@
 # Casa Scout · sitio web
 
-Sitio de Casa Scout (merchandising y regalos corporativos, Chile) en su dirección corporativa aprobada. Son seis páginas en HTML, CSS y JavaScript simple, sin dependencias ni paso de compilación.
+Sitio de Casa Scout (merchandising y regalos corporativos, Chile) en su dirección corporativa aprobada. Seis páginas hechas con [Astro](https://astro.build) (salida estática), con el mismo HTML, clases y CSS del diseño aprobado.
 
-## Verlo en local
+## Desarrollo
 
 ```bash
-python3 -m http.server 8000
-# abrir http://localhost:8000
+npm install
+npm run dev       # http://localhost:4321
+npm run build     # genera dist/ (somos.html, blog.html, ...)
+npm run preview   # sirve dist/
 ```
 
-También se puede abrir `index.html` directamente en el navegador.
+Requiere Node 22.23 o superior.
+
+## Estructura
+
+- `src/pages/`: las seis páginas.
+- `src/layouts/Base.astro`: layout base (`title`, `description`, `pageClass`), con encabezado, pie, fuentes y JS.
+- `src/components/`: `Header`, `Footer`, `WhatsAppButton` y `Pic` (envoltorio de `<Image>`).
+- `src/config/site.ts`: datos pendientes (ver abajo).
+- `src/styles/global.css`: hoja de estilos única.
+- `src/assets/`: logo e imágenes (se procesan a WebP con anchos responsivos).
+
+Las fuentes (Bricolage Grotesque y DM Sans) están autoalojadas con `@fontsource`.
+
+## Datos pendientes y modo publicable
+
+Todos los datos que faltan están en [`src/config/site.ts`](src/config/site.ts) y hoy están **vacíos**: `whatsapp`, `email`, `horario`, `ciudad`, `instagram`, `linkedin`, `zonasDespacho`, `plazoRespuesta`, `logos`, además de `proyectoDestacado` y `etiquetasProyectos`.
+
+Si un dato está vacío, su elemento no se muestra (fila de horario, bloque de redes, grilla de logos, botones de WhatsApp, formulario) y no queda ningún texto entre corchetes. Al completar un valor, el elemento aparece solo.
+
+Ojo: sin `email` no se muestra el formulario de cotización, y sin `whatsapp` no se muestra la tarjeta "Por WhatsApp". Con ambos vacíos, Contacto queda sin forma de contacto; completa al menos uno antes de publicar.
 
 ## Estado
 
@@ -19,17 +40,16 @@ También se puede abrir `index.html` directamente en el navegador.
 ## Pendientes
 
 1. Logos de clientes y fotografías reales (los enviará Carlos).
-2. Número de WhatsApp (`https://wa.me/[número]`), correo de contacto (también en `CONTACT_EMAIL`, en `js/main.js`), horario y redes sociales.
-3. Proyecto destacado real: cliente, contexto y escala.
+2. WhatsApp, correo, horario y redes (en `src/config/site.ts`).
+3. Proyecto destacado real: cliente, contexto y escala (`proyectoDestacado`).
 4. Proyectos reales para la grilla de Clientes y proyectos.
 5. Zonas de despacho y plazo de respuesta.
 6. Conectar el formulario a un servicio real. Hoy abre el correo del visitante con el mensaje ya armado.
 7. Redactar los artículos del blog. Los títulos actuales son propuestas para SEO.
+8. Metadatos para compartir en redes (Open Graph), `sitemap.xml` y `robots.txt`.
 
-## Próximos pasos sugeridos
+## Publicación (Vercel)
 
-- Pasar el sitio a un generador estático (por ejemplo, Astro) para tener el encabezado y el pie en un solo lugar y el blog en Markdown, conservando el mismo HTML y CSS.
-- Agregar metadatos para compartir en redes (Open Graph), `sitemap.xml` y `robots.txt`.
-- Optimizar las fotos reales en WebP o AVIF, con anchos responsivos.
+El proyecto debe usar el preset **Astro**, con comando de build `npm run build` y directorio de salida `dist`.
 
 Las reglas de diseño y lo que no se debe agregar están en [`AGENTS.md`](AGENTS.md). El brief completo está en [`docs/brief.md`](docs/brief.md).

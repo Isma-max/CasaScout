@@ -1,0 +1,157 @@
+---
+import Base from '../layouts/Base.astro';
+import Pic from '../components/Pic.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import { site, waUrl, proyectoDestacado, etiquetasProyectos } from '../config/site';
+import kit from '../assets/img/kit.webp';
+import bottles from '../assets/img/bottles.webp';
+import desk from '../assets/img/desk.webp';
+import pins from '../assets/img/pins.webp';
+import scale from '../assets/img/scale.webp';
+
+const unir = (...p: string[]) => p.filter(Boolean).join(' · ');
+const etqCampana = unir(proyectoDestacado.cliente, proyectoDestacado.escala);
+
+const categorias = ['Empresas', 'Corporaciones', 'Colegios', 'Instituciones'] as const;
+const columnas = categorias
+  .map((c) => ({ categoria: c, items: site.logos.filter((l) => l.categoria === c) }))
+  .filter((c) => c.items.length > 0);
+
+const articulos = [
+  { k: 'Kits de bienvenida', t: 'Cómo armar un kit de bienvenida que tu equipo quiera usar' },
+  { k: 'Regalos corporativos', t: 'Regalos de fin de año: qué elegir según tu presupuesto' },
+  { k: 'Branding', t: 'Serigrafía, grabado o bordado: cómo marcar cada material' },
+  { k: 'Merchandising', t: 'Productos que representan a una organización: por qué importa la calidad' },
+  { k: 'Colegios', t: 'Pins, insignias y regalos para comunidades escolares' },
+];
+---
+
+<Base
+  title="Casa Scout · Merchandising y regalos corporativos"
+  description="Merchandising, regalos corporativos, kits de bienvenida y proyectos personalizados para empresas, colegios e instituciones."
+  pageClass="pg-inicio"
+>
+  <section class="hero grid" id="inicio" aria-labelledby="h1">
+    <h1 id="h1">Merchandising y regalos corporativos</h1>
+    <div class="copy">
+      <p class="lead">Desde un producto con tu logo hasta un proyecto completo. Lo diseñamos, lo producimos y lo entregamos.</p>
+      <div class="acts">
+        <a class="btn" href="#contacto">Solicitar cotización</a>
+        <WhatsAppButton ghost label="Conversar por WhatsApp" />
+      </div>
+    </div>
+    <figure class="ph big">
+      <Pic
+        src={kit}
+        alt="Kit de bienvenida abierto: libreta, botella, pin y tarjeta con el logo de un cliente"
+        sizes="(max-width: 820px) 100vw, 58vw"
+        loading="eager"
+      />
+      <span class="tag">Render provisional</span>
+    </figure>
+    <p class="who">Para empresas, corporaciones, colegios e instituciones de todo Chile.</p>
+  </section>
+
+  <section class="svc" id="que-hacemos" aria-labelledby="h-svc">
+    <div class="grid">
+      <div class="head rv"><h2 id="h-svc">Qué hacemos</h2><p class="lead">Cuatro formas de llevar tu marca a objetos que la gente usa y conserva.</p></div>
+    </div>
+    <div class="band rv2">
+      <a href="que-hacemos.html#merch" style="flex-grow:5">
+        <Pic src={bottles} alt="Botellas térmicas en cuatro colores con el logo de un cliente" sizes="(max-width: 820px) 50vw, 36vw" />
+        <span class="lbl"><b>Merchandising</b><span>Productos de calidad con tu logo, en la técnica que mejor le queda a cada material.</span></span>
+        <span class="tag">Render provisional</span>
+      </a>
+      <a href="que-hacemos.html#regalos" style="flex-grow:3">
+        <Pic src={desk} alt="Libreta, lápices y pin personalizados" sizes="(max-width: 820px) 50vw, 22vw" />
+        <span class="lbl"><b>Regalos corporativos</b><span>Para clientes, aniversarios y fechas especiales.</span></span>
+      </a>
+      <a href="que-hacemos.html#kits" style="flex-grow:3">
+        <Pic src={kit} alt="Kit de bienvenida" sizes="(max-width: 820px) 50vw, 22vw" style="object-position:72% 50%" />
+        <span class="lbl"><b>Kits de bienvenida</b><span>Una caja propia para recibir a cada persona nueva.</span></span>
+      </a>
+      <a href="que-hacemos.html#proyectos-p" style="flex-grow:3">
+        <Pic src={pins} alt="Pins esmaltados con formas propias" sizes="(max-width: 820px) 50vw, 22vw" />
+        <span class="lbl"><b>Proyectos personalizados</b><span>Objetos diseñados desde cero para tu organización.</span></span>
+      </a>
+    </div>
+  </section>
+
+  <section class="paths grid" id="pedido-o-idea" aria-labelledby="h-paths">
+    <h2 id="h-paths" class="rv">Trae un pedido o una idea</h2>
+    <div class="pa rv"><h3>Sabes lo que necesitas</h3><p>Nos dices el producto, la cantidad y la fecha. Te asesoramos en materiales y marcado, y cumplimos el plazo.</p></div>
+    <div class="pb rv2"><h3>Tienes una idea, o solo una necesidad</h3><p>Te proponemos una solución completa: qué regalar, cómo presentarlo y cómo producirlo a la escala que necesites.</p></div>
+  </section>
+
+  <section class="work" id="proyectos" aria-labelledby="h-work">
+    <div class="wh rv"><h2 id="h-work">Clientes y proyectos</h2><p class="lead">Una selección de trabajos.</p></div>
+    <a class="tile t-wide rv" href="clientes-y-proyectos.html">
+      <div class="ph"><Pic src={scale} alt="Cajas para una campaña de fin de año" sizes="(max-width: 820px) 100vw, 45vw" /></div>
+      <div class="cap"><b>Campaña de fin de año</b>{etqCampana && <span>{etqCampana}</span>}</div>
+    </a>
+    <a class="tile t-4 rv2" href="clientes-y-proyectos.html">
+      <div class="ph"><Pic src={pins} alt="Pins institucionales" sizes="(max-width: 820px) 50vw, 22vw" /></div>
+      <div class="cap"><b>Pins institucionales</b>{etiquetasProyectos.pins && <span>{etiquetasProyectos.pins}</span>}</div>
+    </a>
+    <a class="tile t-k rv" href="clientes-y-proyectos.html">
+      <div class="ph"><Pic src={kit} alt="Kit de bienvenida" sizes="(max-width: 820px) 100vw, 45vw" /></div>
+      <div class="cap"><b>Kit de bienvenida</b>{etiquetasProyectos.kit && <span>{etiquetasProyectos.kit}</span>}</div>
+    </a>
+    <a class="tile t-3 rv2" href="clientes-y-proyectos.html">
+      <div class="ph"><Pic src={desk} alt="Set de escritorio" sizes="(max-width: 820px) 50vw, 22vw" /></div>
+      <div class="cap"><b>Set de escritorio</b>{etiquetasProyectos.escritorio && <span>{etiquetasProyectos.escritorio}</span>}</div>
+    </a>
+    <div class="more"><a class="link" href="clientes-y-proyectos.html"><span>Ver todos los proyectos</span> →</a></div>
+  </section>
+
+  {
+    columnas.length > 0 && (
+      <section class="clients grid" aria-labelledby="h-clients">
+        <h2 id="h-clients" class="rv">Confían en nosotros</h2>
+        <div class="cols rv2">
+          {columnas.map((c) => (
+            <div>
+              <span class="k">{c.categoria}</span>
+              {c.items.map((l) => <span>{l.nombre}</span>)}
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="blog grid" id="blog" aria-labelledby="h-blog">
+    <div class="bh rv"><h2 id="h-blog">Guías para elegir bien</h2><p class="lead">Ideas y criterios para regalar mejor, desde nuestro blog.</p><a class="link" href="blog.html"><span>Ir al blog</span> →</a></div>
+    <ul class="rv2">
+      {
+        articulos.map((a) => (
+          <li><a href="blog.html"><span class="k">{a.k}</span><span class="t">{a.t}</span><span class="ar" aria-hidden="true">→</span></a></li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="contact grid" id="contacto" aria-labelledby="h-contact">
+    <div class="intro rv"><h2 id="h-contact">Conversemos</h2><p class="lead">No necesitas saber qué producto quieres. Cuéntanos qué buscas y te ayudamos a definirlo.</p></div>
+    {
+      waUrl && (
+        <div class="wa rv2">
+          <WhatsAppButton label="Escribir por WhatsApp" />
+          <p class="small">Para ideas, proyectos o consultas rápidas.{site.horario && ` Horario de atención: ${site.horario}.`}</p>
+        </div>
+      )
+    }
+    {
+      site.email && (
+        <form class="quote-form" data-quote-form data-email={site.email} novalidate aria-labelledby="h-form">
+          <h3 id="h-form">Solicitar cotización</h3>
+          <div class="f"><label for="c-n">Nombre</label><input id="c-n" required type="text" autocomplete="name" name="nombre" /></div>
+          <div class="f"><label for="c-e">Correo</label><input id="c-e" type="email" autocomplete="email" name="correo" /></div>
+          <div class="f full"><label for="c-w">WhatsApp</label><input id="c-w" type="tel" autocomplete="tel" placeholder="+56 9" name="whatsapp" /></div>
+          <div class="f full"><label for="c-q">¿Qué necesitas?</label><textarea id="c-q" placeholder="Por ejemplo: 150 kits de bienvenida para marzo, o una idea para el aniversario de la empresa." name="necesidad"></textarea></div>
+          <div class="send"><button class="btn" type="submit">Enviar solicitud</button></div>
+        </form>
+      )
+    }
+  </section>
+</Base>

@@ -1,0 +1,95 @@
+---
+import Base from '../layouts/Base.astro';
+import Pic from '../components/Pic.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import { site, proyectoDestacado, etiquetasProyectos } from '../config/site';
+import scale from '../assets/img/scale.webp';
+import kit from '../assets/img/kit.webp';
+import pins from '../assets/img/pins.webp';
+import desk from '../assets/img/desk.webp';
+import bottles from '../assets/img/bottles.webp';
+import tote from '../assets/img/p-tote.webp';
+import kitbox from '../assets/img/p-kitbox.webp';
+
+const filtros = [
+  { id: 'todo', t: 'Todos' },
+  { id: 'merch', t: 'Merchandising' },
+  { id: 'regalos', t: 'Regalos corporativos' },
+  { id: 'kits', t: 'Kits de bienvenida' },
+  { id: 'personalizados', t: 'Personalizados' },
+];
+const proyectos = [
+  { cat: 'kits', src: kit, alt: 'Kit de bienvenida abierto', n: 'Kit de bienvenida', e: 'kit', pos: '72% 50%' },
+  { cat: 'personalizados', src: pins, alt: 'Pins esmaltados', n: 'Pins institucionales', e: 'pins', pos: '50% 50%' },
+  { cat: 'regalos', src: desk, alt: 'Libreta y lápices', n: 'Set de escritorio', e: 'escritorio', pos: '40% 50%' },
+  { cat: 'merch', src: bottles, alt: 'Botellas térmicas', n: 'Botellas para equipos', e: 'botellas', pos: '50% 50%' },
+  { cat: 'merch', src: tote, alt: 'Bolsa de algodón', n: 'Bolsas para un evento', e: 'bolsas', pos: '50% 50%' },
+  { cat: 'regalos', src: kitbox, alt: 'Caja de regalo', n: 'Regalo de aniversario', e: 'aniversario', pos: '50% 50%' },
+];
+---
+
+<Base
+  title="Clientes y proyectos · Casa Scout"
+  description="Una selección de trabajos para empresas, colegios e instituciones."
+  pageClass="pg-proyectos"
+  current="clientes-y-proyectos"
+>
+  <section class="top grid" aria-labelledby="p-h1">
+    <h1 id="p-h1">Clientes y proyectos</h1>
+    <p class="lead">Una selección de trabajos para empresas, colegios e instituciones.</p>
+  </section>
+
+  {
+    site.logos.length > 0 && (
+      <section class="logos grid" aria-labelledby="p-logos">
+        <h2 id="p-logos">Confían en nosotros</h2>
+        <div class="lgrid">
+          {site.logos.map((l) => <span>{l.logo ? <img src={l.logo} alt={l.nombre} /> : l.nombre}</span>)}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="feat grid" aria-labelledby="p-feat">
+    <figure class="ph rv">
+      <Pic src={scale} alt="Cajas iguales listas para una campaña" sizes="(max-width: 820px) 100vw, 66vw" />
+      <span class="tag">Render provisional</span>
+    </figure>
+    <div class="t rv2">
+      <h2 id="p-feat">Campaña de fin de año</h2>
+      {proyectoDestacado.contexto && <p>{proyectoDestacado.contexto}</p>}
+      <dl>
+        {proyectoDestacado.cliente && <><dt>Cliente</dt><dd>{proyectoDestacado.cliente}</dd></>}
+        <dt>Servicio</dt><dd>Regalos corporativos</dd>
+        {proyectoDestacado.escala && <><dt>Escala</dt><dd>{proyectoDestacado.escala}</dd></>}
+      </dl>
+    </div>
+  </section>
+
+  <section class="list grid" aria-labelledby="p-list">
+    <div class="h rv"><h2 id="p-list">Más proyectos</h2>
+      <div class="filters" role="group" aria-label="Filtrar proyectos">
+        {filtros.map((f) => <button class="chip" type="button" data-filter={f.id} aria-pressed={f.id === 'todo' ? 'true' : 'false'}>{f.t}</button>)}
+      </div>
+    </div>
+    <div class="pgrid" data-filter-list>
+      {
+        proyectos.map((p) => (
+          <a href="#p-feat" data-cat={p.cat}>
+            <div class="ph"><Pic src={p.src} alt={p.alt} sizes="(max-width: 820px) 50vw, 32vw" style={`object-position:${p.pos}`} /></div>
+            <div class="cap"><b>{p.n}</b>{etiquetasProyectos[p.e] && <span>{etiquetasProyectos[p.e]}</span>}</div>
+          </a>
+        ))
+      }
+    </div>
+    <p class="note small">Proyectos e imágenes de muestra.</p>
+  </section>
+
+  <section class="cta grid" aria-labelledby="p-cta">
+    <h2 id="p-cta" class="rv">¿Hacemos el próximo juntos?</h2>
+    <div class="acts rv2">
+      <a class="btn" href="contacto.html">Solicitar cotización</a>
+      <WhatsAppButton ghost label="Conversar por WhatsApp" />
+    </div>
+  </section>
+</Base>
