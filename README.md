@@ -17,8 +17,8 @@ Requiere Node 22.23 o superior.
 
 - `src/pages/`: las seis páginas y `privacidad.astro` (política de privacidad).
 - `src/layouts/Base.astro`: layout base (`title`, `description`, `pageClass`), con encabezado, pie, fuentes y JS.
-- `src/components/`: `Header`, `Footer`, `WhatsAppButton`, `QuoteForm` (formulario de cotización) y `Pic` (envoltorio de `<Image>`).
-- `src/config/site.ts`: datos pendientes (ver abajo).
+- `src/components/`: `Header`, `Footer`, `WhatsAppButton`, `QuoteForm` (formulario de cotización), `Analytics` y `Pic` (envoltorio de `<Image>`).
+- `src/config/site.ts`: datos pendientes (ver abajo). `src/config/env.ts`: variables de entorno.
 - `src/styles/global.css`: hoja de estilos única.
 - `src/assets/`: logo e imágenes (se procesan a WebP con anchos responsivos).
 
@@ -46,7 +46,7 @@ Ojo: sin `whatsapp` no se muestra la tarjeta "Por WhatsApp", y sin la clave de W
 5. Zonas de despacho y plazo de respuesta.
 6. Crear la cuenta de Web3Forms con el correo de Casa Scout y cargar la clave (ver abajo).
 7. Redactar los artículos del blog. Los títulos actuales son propuestas para SEO.
-8. Metadatos para compartir en redes (Open Graph), `sitemap.xml` y `robots.txt`.
+8. Reemplazar `public/og-default.png` por una imagen con fotos reales, definir `PUBLIC_SITE_URL` y pasar `PUBLIC_STAGING` a `false` al publicar.
 
 ## Formulario de cotización (Web3Forms)
 
@@ -61,6 +61,23 @@ El formulario de Inicio y Contacto (`src/components/QuoteForm.astro`, lógica en
 Incluye honeypot (`botcheck`), validación accesible (errores asociados a cada campo con `aria-describedby`, `aria-invalid`, foco en el primer error), confirmación en la misma página sin recargar y aviso de error con reintento. Se exige nombre, mensaje, y correo o WhatsApp.
 
 La política de privacidad está en `src/pages/privacidad.astro`, enlazada desde el formulario y el pie. Es un texto breve de partida: conviene que la revise una persona del área legal antes de publicar, y ajustarla si cambian el proveedor del formulario, el uso de analítica o los plazos de conservación.
+
+## SEO, staging y analítica
+
+Variables de entorno (ver `.env.example`; se leen en el build, así que cambiarlas exige redesplegar):
+
+| Variable | Qué hace |
+|---|---|
+| `PUBLIC_SITE_URL` | URL pública sin barra final. Se usa en canónicas, Open Graph, sitemap y `robots.txt`. Sin valor, usa la URL de Vercel. Defínela al tener dominio propio. |
+| `PUBLIC_STAGING` | Mientras sea `true`: todas las páginas llevan `noindex, nofollow`, `robots.txt` no anuncia el sitemap y la analítica no se carga. Poner `false` (o dejar vacío) al publicar. **Sin valor, el sitio es indexable.** |
+| `PUBLIC_ANALYTICS` | `plausible` o `ga4`. Vacío: sin analítica. |
+| `PUBLIC_PLAUSIBLE_DOMAIN`, `PUBLIC_PLAUSIBLE_SRC` | Plausible: dominio registrado y, opcionalmente, URL del script (por defecto `https://plausible.io/js/script.js`). |
+| `PUBLIC_GA4_ID` | GA4: ID de medición (`G-XXXXXXXXXX`). |
+
+- **Open Graph y Twitter:** `Base.astro` agrega los metadatos con la imagen por defecto `public/og-default.png` (1200x630). Para regenerarla o cambiarla: `node scripts/make-social-images.mjs`, o reemplaza el archivo por una imagen propia. Cada página puede pasar su propia `image` al layout.
+- **Datos estructurados:** el inicio incluye JSON-LD de `Organization` armado con `src/config/site.ts` (nombre y descripción fijos en `marca`; correo, teléfono, ciudad y redes solo si existen).
+- **Sitemap y robots:** `@astrojs/sitemap` genera `sitemap-index.xml` (con las URLs `.html`) y `src/pages/robots.txt.ts` genera `robots.txt`. En staging no se bloquea el rastreo con `Disallow`, para que los buscadores puedan leer el `noindex`.
+- **Analítica:** `Analytics.astro` carga Plausible o GA4 según las variables. Eventos: clic en WhatsApp (`WhatsApp Click` / `whatsapp_click`, con la página y la zona) y envío del formulario (`Form Submit` / `form_submit`). En GA4 conviene marcar `form_submit` como evento clave. La política de privacidad cambia sola según la analítica activa.
 
 ## Publicación (Vercel)
 

@@ -5,6 +5,9 @@ import '@fontsource/dm-sans/latin-600.css';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Analytics from '../components/Analytics.astro';
+import { staging } from '../config/env';
+import { site, marca } from '../config/site';
 
 interface Props {
   title: string;
@@ -12,9 +15,45 @@ interface Props {
   /** Clase de la página (pg-inicio, pg-somos, ...), usada por la hoja de estilos. */
   pageClass: string;
   current?: 'somos' | 'que-hacemos' | 'clientes-y-proyectos' | 'blog' | 'contacto';
+  /** Imagen para compartir (ruta en public/). Por defecto, la imagen de la marca. */
+  image?: string;
+  /** Incluye los datos estructurados de Organization (se usa en el inicio). */
+  organization?: boolean;
 }
 
-const { title, description, pageClass, current } = Astro.props;
+const { title, description, pageClass, current, image = marca.imagen, organization = false } = Astro.props;
+
+// URLs absolutas: canónica sin "index.html" y recursos con el dominio del sitio.
+const origin = Astro.site ?? new URL(Astro.url.origin);
+const canonical = new URL(Astro.url.pathname.replace(/index\.html$/, ''), origin).href;
+const imageUrl = new URL(image, origin).href;
+
+// Datos estructurados de Organization, solo con los datos que existen en site.ts.
+const telefono = site.whatsapp ? `+${site.whatsapp.replace(/\D/g, '')}` : '';
+const sameAs = [site.instagram, site.linkedin].filter(Boolean);
+const orgData = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: marca.nombre,
+  url: new URL('/', origin).href,
+  logo: new URL(marca.logo, origin).href,
+  description: marca.descripcion,
+  ...(site.email && { email: site.email }),
+  ...(telefono && { telephone: telefono }),
+  ...(site.ciudad && { address: { '@type': 'PostalAddress', addressLocality: site.ciudad } }),
+  ...(sameAs.length && { sameAs }),
+  ...((telefono || site.email) && {
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'ventas',
+      availableLanguage: 'es',
+      ...(telefono && { telephone: telefono }),
+      ...(site.email && { email: site.email }),
+    },
+  }),
+};
+// Evita cerrar el <script> por error si algún dato contuviera "<".
+const orgJson = JSON.stringify(orgData).replace(/</g, '\\u003c');
 ---
 
 <!doctype html>
@@ -24,7 +63,29 @@ const { title, description, pageClass, current } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    {staging && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_CL" />
+    <meta property="og:site_name" content={marca.nombre} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={marca.imagenAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <meta name="twitter:image:alt" content={marca.imagenAlt} />
+
+    {organization && <script type="application/ld+json" set:html={orgJson} />}
+    <Analytics />
   </head>
   <body>
     <div class={`cv ${pageClass}`}>

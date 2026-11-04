@@ -59,3 +59,15 @@ export const etiquetasProyectos: Record<string, string> = {
 
 /** Enlace de WhatsApp o cadena vacía si no hay número. */
 export const waUrl = site.whatsapp ? `https://wa.me/${site.whatsapp.replace(/\D/g, '')}` : '';
+
+/** Datos fijos de la marca (no son pendientes): se usan en metadatos y datos estructurados. */
+export const marca = {
+  nombre: 'Casa Scout',
+  descripcion:
+    'Merchandising, regalos corporativos, kits de bienvenida y proyectos personalizados para empresas, colegios e instituciones en Chile.',
+  /** Imagen por defecto para compartir en redes (1200x630, en public/). */
+  imagen: '/og-default.png',
+  imagenAlt: 'Logo de Casa Scout junto a un kit de bienvenida con libreta, botella y pin',
+  /** Logo en PNG para datos estructurados (en public/). */
+  logo: '/logo-casa-scout.png',
+};

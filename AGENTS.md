@@ -14,9 +14,11 @@ src/pages/clientes-y-proyectos.astro   Logos de clientes, proyecto destacado, gr
 src/pages/blog.astro                   Artículo destacado y lista filtrable (temas pensados para SEO)
 src/pages/contacto.astro               WhatsApp + formulario de cotización
 src/pages/privacidad.astro             Política de privacidad (enlazada desde el formulario y el pie)
-src/layouts/Base.astro                 Layout base: title, description, pageClass; incluye encabezado, pie, fuentes y JS
-src/components/                        Header, Footer, WhatsAppButton, QuoteForm, Pic (envoltorio de <Image>)
-src/config/site.ts                     Datos pendientes (WhatsApp, correo, horario, ciudad, redes, zonas, plazo, logos)
+src/layouts/Base.astro                 Layout base: title, description, pageClass; incluye encabezado, pie, fuentes, JS, metadatos Open Graph/Twitter, canónica, noindex en staging y JSON-LD
+src/components/                        Header, Footer, WhatsAppButton, QuoteForm, Analytics, Pic (envoltorio de <Image>)
+src/config/site.ts                     Datos pendientes (WhatsApp, correo, horario, ciudad, redes, zonas, plazo, logos) y datos fijos de marca
+src/config/env.ts                      Variables de entorno (PUBLIC_STAGING, analítica)
+src/pages/robots.txt.ts                robots.txt dinámico (el sitemap lo genera @astrojs/sitemap)
 src/styles/global.css                  Hoja única: base y tokens en .cv, luego un bloque por página (.pg-*)
 src/scripts/main.js                    Filtros por categoría y formulario de cotización (Web3Forms)
 src/assets/                            Logo (SVG) e imágenes (WebP); Astro las optimiza con <Image>
@@ -54,6 +56,13 @@ Para agregar un dato nuevo, ocúltalo cuando esté vacío con la misma lógica (
 - Botones rectos: morado sólido, o "ghost" con borde de tinta.
 - Mucho espacio en blanco: separaciones de 160 a 200px entre secciones en escritorio, ~104px en celular.
 - Todos los tokens están como variables CSS en `.cv` al inicio de `src/styles/global.css`.
+
+## SEO, staging y analítica
+
+- `PUBLIC_STAGING=true` pone `noindex, nofollow` en todas las páginas y desactiva la analítica. No quites el `noindex` en staging ni bloquees el rastreo con `Disallow` (impediría leerlo). Al publicar, `PUBLIC_STAGING=false`.
+- Las URLs son `.html` (`build.format: "file"`): canónicas y sitemap deben usar esas mismas URLs.
+- Los metadatos salen de `Base.astro` y los datos de marca de `marca` en `site.ts`. El JSON-LD de Organization solo incluye datos que existan (sin campos vacíos).
+- Analítica: Plausible o GA4 por variable de entorno (ver `.env.example`). Los eventos (`WhatsApp Click`, `Form Submit`) están en `src/scripts/main.js`. Si cambias la analítica, revisa el texto de `privacidad.astro`.
 
 ## Formulario de cotización
 

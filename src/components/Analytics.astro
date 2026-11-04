@@ -1,0 +1,27 @@
+---
+import { analytics } from '../config/env';
+---
+
+{
+  analytics.provider === 'plausible' && (
+    <>
+      <script is:inline>
+        window.plausible = window.plausible || function () {(window.plausible.q = window.plausible.q || []).push(arguments);};
+      </script>
+      <script is:inline defer data-domain={analytics.plausibleDomain} src={analytics.plausibleSrc}></script>
+    </>
+  )
+}
+{
+  analytics.provider === 'ga4' && (
+    <>
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${analytics.ga4Id}`}></script>
+      <script is:inline define:vars={{ id: analytics.ga4Id }}>
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () {window.dataLayer.push(arguments);};
+        gtag('js', new Date());
+        gtag('config', id);
+      </script>
+    </>
+  )
+}

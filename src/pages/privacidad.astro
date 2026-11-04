@@ -1,10 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
 import { site } from '../config/site';
+import { analytics } from '../config/env';
 
 const contacto = site.email
   ? `Para ejercerlos, escríbenos a ${site.email}.`
   : 'Para ejercerlos, escríbenos por los medios de contacto de este sitio.';
+
+const medicion =
+  analytics.provider === 'plausible'
+    ? 'Medimos las visitas con Plausible, una herramienta de analítica que no usa cookies ni guarda datos personales de quienes navegan. Este sitio no usa cookies de seguimiento.'
+    : analytics.provider === 'ga4'
+      ? 'Medimos las visitas con Google Analytics, que usa cookies para obtener estadísticas de uso del sitio. Puedes bloquearlas desde la configuración de tu navegador.'
+      : 'Este sitio no usa cookies de seguimiento ni herramientas de analítica.';
 ---
 
 <Base
@@ -31,7 +39,7 @@ const contacto = site.email
         <li>Tu correo, tu número de WhatsApp, o ambos.</li>
         <li>El mensaje con lo que necesitas.</li>
       </ul>
-      <p>También registramos la página desde la que escribiste. No te pedimos datos sensibles; te pedimos que no los incluyas en el mensaje. Este sitio no usa cookies de seguimiento ni herramientas de analítica.</p>
+      <p>También registramos la página desde la que escribiste. No te pedimos datos sensibles; te pedimos que no los incluyas en el mensaje. {medicion}</p>
     </div>
 
     <h2 class="rv">Para qué los usamos</h2>

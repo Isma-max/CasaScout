@@ -1,5 +1,29 @@
 // Casa Scout · comportamiento del sitio (JavaScript simple, sin dependencias)
 
+// Analítica (Plausible o GA4, ver Analytics.astro). Si no hay analítica activa, no hace nada.
+// Eventos: clic en WhatsApp y envío del formulario.
+const EVENTS = {
+  whatsapp: { plausible: 'WhatsApp Click', ga4: 'whatsapp_click' },
+  form: { plausible: 'Form Submit', ga4: 'form_submit' },
+};
+function track(key, props = {}) {
+  try {
+    if (typeof window.plausible === 'function') window.plausible(EVENTS[key].plausible, { props });
+    if (typeof window.gtag === 'function') window.gtag('event', EVENTS[key].ga4, props);
+  } catch (err) {
+    // La analítica nunca debe romper el sitio.
+  }
+}
+['click', 'auxclick'].forEach((type) => {
+  document.addEventListener(type, (ev) => {
+    if (type === 'auxclick' && ev.button !== 1) return;
+    const link = ev.target.closest && ev.target.closest('a[href^="https://wa.me/"]');
+    if (!link) return;
+    const zona = link.closest('footer') ? 'footer' : (link.closest('section') || {}).className;
+    track('whatsapp', { page: window.location.pathname, zona: String(zona || 'pagina').split(' ')[0] });
+  });
+});
+
 // Filtros por categoría (Clientes y proyectos, Blog)
 document.querySelectorAll('[data-filter-list]').forEach((list) => {
   const section = list.closest('section');
@@ -149,6 +173,7 @@ document.querySelectorAll('[data-quote-form]').forEach((form) => {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.success) throw new Error(data.message || `HTTP ${res.status}`);
+      track('form', { page: window.location.pathname });
       showOk();
     } catch (err) {
       failed = true;
