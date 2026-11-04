@@ -40,7 +40,7 @@ const og = await getImage({ src: data.image, width: 1200, height: 630, fit: 'cov
 
     <div class="cover grid">
       <figure class="ph">
-        <Pic src={data.image} alt={data.imageAlt} sizes="(max-width: 820px) 100vw, 90vw" loading="eager" />
+        <Pic src={data.image} alt={data.imageAlt} sizes="(max-width: 820px) 100vw, 90vw" loading="eager" fetchpriority="high" />
         <span class="tag">Render provisional</span>
       </figure>
     </div>

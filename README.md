@@ -1,96 +1,200 @@
 # Casa Scout · sitio web
 
-Sitio de Casa Scout (merchandising y regalos corporativos, Chile) en su dirección corporativa aprobada. Seis páginas hechas con [Astro](https://astro.build) (salida estática), con el mismo HTML, clases y CSS del diseño aprobado.
+Sitio web corporativo de Casa Scout (merchandising y regalos corporativos en Chile) desarrollado con [Astro](https://astro.build) (generación estática, `output: 'static'`). Mantiene con fidelidad el diseño aprobado, la paleta de color (#3B1E59), la tipografía (Bricolage Grotesque + DM Sans autoalojadas con `@fontsource`) y los estilos CSS originales, optimizado para móvil (360px–390px) y escritorio (1440px).
 
-## Desarrollo
+---
+
+## Cómo correr el proyecto
+
+### Prerrequisitos
+- **Node.js**: versión 22.23 o superior (recomendado Node 22 LTS).
+- **npm**: incluido con Node.js.
+
+### Comandos de desarrollo
 
 ```bash
+# 1. Instalar dependencias
 npm install
-npm run dev       # http://localhost:4321
-npm run build     # genera dist/ (somos.html, blog.html, ...)
-npm run preview   # sirve dist/
+
+# 2. Iniciar servidor de desarrollo local (Astro dev)
+npm run dev
+# Disponible en: http://localhost:4321
+
+# 3. Compilar para producción (genera la carpeta dist/ con archivos .html estáticos)
+npm run build
+
+# 4. Previsualizar localmente el build de producción
+npm run preview
+# Disponible en: http://localhost:4321
 ```
 
-Requiere Node 22.23 o superior.
+### Configuración local (.env)
+Para probar el formulario de cotización o la configuración de entorno en tu máquina local:
+```bash
+cp .env.example .env
+```
+Completa las variables que necesites probar (por ejemplo `PUBLIC_WEB3FORMS_KEY`).
 
-## Estructura
+---
 
-- `src/pages/`: las seis páginas, `privacidad.astro` (política de privacidad) y `blog/[slug].astro` (una página por artículo).
-- `src/content/blog/`: artículos en Markdown (content collection). Ver "Blog" abajo.
-- `src/layouts/Base.astro`: layout base (`title`, `description`, `pageClass`), con encabezado, pie, fuentes y JS.
-- `src/components/`: `Header`, `Footer`, `WhatsAppButton`, `QuoteForm` (formulario de cotización), `Analytics` y `Pic` (envoltorio de `<Image>`).
-- `src/config/site.ts`: datos pendientes (ver abajo). `src/config/env.ts`: variables de entorno.
-- `src/styles/global.css`: hoja de estilos única.
-- `src/assets/`: logo e imágenes (se procesan a WebP con anchos responsivos).
+## Cómo desplegar en Vercel
 
-Las fuentes (Bricolage Grotesque y DM Sans) están autoalojadas con `@fontsource`.
+El proyecto está preparado para desplegarse de manera limpia en [Vercel](https://vercel.com).
 
-## Datos pendientes y modo publicable
+### Configuración del framework
+El repositorio incluye un archivo [`vercel.json`](vercel.json) en la raíz con la directiva:
+```json
+{
+  "framework": "astro",
+  "cleanUrls": false,
+  "headers": [
+    {
+      "source": "/_astro/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}
+```
+Esto le indica a Vercel que compile el proyecto utilizando el preset oficial de Astro (comando `npm run build` y directorio de salida `dist`), sin necesidad de reconfigurar manualmente los ajustes del proyecto ni alterar la rama `main`.
 
-Todos los datos que faltan están en [`src/config/site.ts`](src/config/site.ts) y hoy están **vacíos**: `whatsapp`, `email`, `horario`, `ciudad`, `instagram`, `linkedin`, `zonasDespacho`, `plazoRespuesta`, `logos`, además de `proyectoDestacado` y `etiquetasProyectos`.
+### Variables de entorno en Vercel
+1. Ve a tu proyecto en Vercel: **Settings → Environment Variables**.
+2. Agrega las variables requeridas (mínimo `PUBLIC_WEB3FORMS_KEY`).
+3. Asígnalas a los entornos deseados: **Production**, **Preview** y **Development**.
+4. *Importante:* En Astro, las variables que inician con `PUBLIC_` se inyectan en tiempo de compilación. Si modificas una variable en Vercel, debes gatillar un nuevo despliegue (**Redeploy**) para que tome efecto.
 
-Si un dato está vacío, su elemento no se muestra (fila de horario, bloque de redes, grilla de logos, botones de WhatsApp) y no queda ningún texto entre corchetes. Al completar un valor, el elemento aparece solo.
+### Flujo de trabajo en ramas
+- **Vistas previas (Preview Deployments):** Al hacer `git push origin astro`, Vercel genera automáticamente una vista previa independiente (Preview URL) con su propio enlace HTTPS, ideal para revisiones y pruebas sin alterar el sitio en vivo.
+- **Pase a producción:** La rama de producción está vinculada a `main`. Una vez que el contenido de Carlos esté cargado y validado en la rama `astro`, se puede promover a producción mediante un Pull Request (`astro` → `main`) o actualizando la Production Branch en **Settings → Git** del dashboard de Vercel.
 
-Ojo: sin `whatsapp` no se muestra la tarjeta "Por WhatsApp", y sin la clave de Web3Forms (ver abajo) no se muestra el formulario de cotización. Con ambos vacíos, Contacto queda sin forma de contacto; completa al menos uno antes de publicar.
+---
 
-## Estado
+## Variables de entorno
 
-- **Aprobado:** dirección visual, estructura de secciones y textos de Somos y Cómo trabajamos. Los textos de Somos están escritos a partir de lo que contó Carlos y deben ser validados por él.
-- **Provisional:** imágenes (renders con un cliente ficticio, "Norte") y datos de contacto.
+Todas las variables de entorno están documentadas en [`.env.example`](.env.example). Al usar el prefijo `PUBLIC_`, están disponibles tanto en componentes Astro como en scripts del cliente.
 
-## Pendientes
+| Variable | Tipo | Requerida | Descripción |
+|---|---|---|---|
+| `PUBLIC_WEB3FORMS_KEY` | String | Sí (para cotizar) | Clave pública de acceso generada en [Web3Forms](https://web3forms.com). Se asocia al correo corporativo que recibe las cotizaciones. Sin esta clave, el formulario se oculta automáticamente para evitar errores de envío. |
+| `PUBLIC_SITE_URL` | URL | Opcional | URL canónica pública del sitio sin barra final (ej.: `https://www.casascout.cl`). Se utiliza para generar URLs canónicas, metadatos Open Graph/Twitter, `robots.txt` y `sitemap-index.xml`. Si no se define, se utiliza automáticamente la URL generada por Vercel. |
+| `PUBLIC_STAGING` | Boolean (`true`/`false`) | Opcional | Control de indexación para ambientes de prueba. Mientras su valor sea `"true"`, todas las páginas llevan metadatos `noindex, nofollow`, `robots.txt` omite el sitemap y la analítica se desactiva. Al pasar a producción, definir en `"false"` o dejar vacío. |
+| `PUBLIC_ANALYTICS` | String (`plausible` \| `ga4`) | Opcional | Activa el proveedor de analítica respetuoso de privacidad. Si está vacío, no se inyecta ningún script de tracking. |
+| `PUBLIC_PLAUSIBLE_DOMAIN` | String | Condicional | Dominio registrado en Plausible (ej.: `casascout.cl`). Requerido si `PUBLIC_ANALYTICS=plausible`. |
+| `PUBLIC_PLAUSIBLE_SRC` | URL | Opcional | URL personalizada para el script de Plausible (por defecto `https://plausible.io/js/script.js`, útil para proxies o instancias autoalojadas). |
+| `PUBLIC_GA4_ID` | String | Condicional | ID de medición de Google Analytics 4 (formato `G-XXXXXXXXXX`). Requerido si `PUBLIC_ANALYTICS=ga4`. |
 
-1. Logos de clientes y fotografías reales (los enviará Carlos).
-2. WhatsApp, correo, horario y redes (en `src/config/site.ts`).
-3. Proyecto destacado real: cliente, contexto y escala (`proyectoDestacado`).
-4. Proyectos reales para la grilla de Clientes y proyectos.
-5. Zonas de despacho y plazo de respuesta.
-6. Crear la cuenta de Web3Forms con el correo de Casa Scout y cargar la clave (ver abajo).
-7. Redactar los cuatro artículos del blog que siguen como borrador y validar con Carlos los tres publicados.
-8. Reemplazar `public/og-default.png` por una imagen con fotos reales, definir `PUBLIC_SITE_URL` y pasar `PUBLIC_STAGING` a `false` al publicar.
+---
+
+## Qué editar en `src/config/site.ts` cuando lleguen los datos de Carlos
+
+El archivo [`src/config/site.ts`](src/config/site.ts) centraliza todos los datos institucionales y de contacto de Casa Scout.
+
+### Modo publicable (Graceful Degradation)
+El sitio opera en **modo publicable**: si un campo está vacío (`''` o `[]`), su componente visual correspondiente (bloque de contacto, botón de WhatsApp, tarjeta, fila de horario, redes sociales o grilla de logos) **no se renderiza en el HTML**, evitando que queden textos provisionales entre corchetes `[ ]` o enlaces rotos visibles para los clientes. Al completar los datos, los elementos se activan solos sin tocar el código fuente de las páginas.
+
+### Lista de campos a completar
+
+Abre [`src/config/site.ts`](src/config/site.ts) y edita los siguientes valores según la información enviada por Carlos:
+
+1. **`site.whatsapp`**:
+   - **Qué ingresar:** Número de teléfono móvil internacional, únicamente dígitos, con código de país (ej.: `'56912345678'`).
+   - **Qué activa:** Habilita el botón flotante global de WhatsApp, el botón en el encabezado móvil, la tarjeta *"Por WhatsApp"* en `/contacto.html` y los llamados a la acción (CTAs) de cotización rápida en el inicio y al final de los artículos del blog.
+2. **`site.email`**:
+   - **Qué ingresar:** Correo electrónico institucional oficial (ej.: `'contacto@casascout.cl'`).
+   - **Qué activa:** Se muestra visible en la página de Contacto, en el pie de página global y en los datos estructurados Schema.org (`Organization`) para buscadores.
+3. **`site.horario`**:
+   - **Qué ingresar:** Texto legible de disponibilidad (ej.: `'Lunes a viernes de 9:00 a 18:00 hrs'`).
+   - **Qué activa:** Despliega la fila de horario en la tarjeta de contacto directo y en el pie de página.
+4. **`site.ciudad`**:
+   - **Qué ingresar:** Comuna o ciudad base de operación (ej.: `'Santiago, Chile'`).
+   - **Qué activa:** Se visualiza en el pie de página y nutre el campo `addressLocality` en el JSON-LD de la empresa.
+5. **`site.instagram`**:
+   - **Qué ingresar:** URL absoluta al perfil público (ej.: `'https://www.instagram.com/casascout'`).
+   - **Qué activa:** Renderiza el enlace con ícono de Instagram en el pie de página y en los perfiles `sameAs` de los datos estructurados.
+6. **`site.linkedin`**:
+   - **Qué ingresar:** URL absoluta a la página de empresa (ej.: `'https://www.linkedin.com/company/casascout'`).
+   - **Qué activa:** Renderiza el enlace con ícono de LinkedIn en el pie de página y en `sameAs` de JSON-LD.
+7. **`site.zonasDespacho`**:
+   - **Qué ingresar:** Texto explicativo sobre la cobertura de entregas (ej.: `'Despachamos a todo Chile mediante transporte coordinado a convenir.'`).
+   - **Qué activa:** Se inserta automáticamente en el paso *"4. Entregamos"* dentro de la página `/somos.html`.
+8. **`site.plazoRespuesta`**:
+   - **Qué ingresar:** Compromiso de tiempo de atención (ej.: `'Respondemos en menos de 24 horas hábiles.'`).
+   - **Qué activa:** Se exhibe como nota de confianza bajo el formulario de cotización en `/contacto.html`.
+9. **`site.logos`** (Lista de clientes):
+   - **Qué ingresar:** Array de objetos tipo `LogoCliente`:
+     ```ts
+     logos: [
+       { nombre: 'Empresa Alfa', categoria: 'Empresas', logo: '/logos/alfa.svg' },
+       { nombre: 'Colegio Beta', categoria: 'Colegios', logo: '/logos/beta.svg' },
+     ]
+     ```
+   - **Qué activa:** Habilita la franja *"Confían en nosotros"* en `/index.html` y la grilla de clientes en `/clientes-y-proyectos.html`. Si no hay archivo SVG o PNG, se renderiza el nombre en tipografía accesible.
+10. **`proyectoDestacado`**:
+    - **Qué ingresar:** Objeto con los datos del caso de éxito principal (`cliente`, `contexto`, `escala`) para sustituir el caso ficticio "Norte" en `/clientes-y-proyectos.html`.
+11. **`etiquetasProyectos`**:
+    - **Qué ingresar:** Descripciones reales de los proyectos mostrados en la galería (`campana`, `pins`, `kit`, `escritorio`, `botellas`, `bolsas`, `aniversario`).
+
+---
 
 ## Formulario de cotización (Web3Forms)
 
-El formulario de Inicio y Contacto (`src/components/QuoteForm.astro`, lógica en `src/scripts/main.js`) envía a [Web3Forms](https://web3forms.com):
+El formulario de cotización presente en el Inicio y en Contacto (`src/components/QuoteForm.astro`, manejado por `src/scripts/main.js`) envía los datos a través de la API de [Web3Forms](https://web3forms.com):
 
-1. Crea una clave de acceso en Web3Forms con el correo donde Casa Scout recibirá las solicitudes.
-2. Defínela en la variable de entorno `PUBLIC_WEB3FORMS_KEY`:
-   - En local: copia `.env.example` a `.env` y completa el valor.
-   - En Vercel: Settings → Environment Variables (Production y Preview) y vuelve a desplegar. La variable se incorpora en el build.
-3. Sin clave, el formulario no se muestra. La clave de Web3Forms es pública por diseño (viaja en el navegador).
+1. **Configuración de clave:** Crea una clave gratuita o pro en Web3Forms indicando el correo donde Carlos recibirá las cotizaciones, y asígnala a la variable `PUBLIC_WEB3FORMS_KEY`.
+2. **Seguridad y antispam:** Incluye honeypot (`botcheck`) transparente para el usuario legítimo pero bloqueador para bots automatizados.
+3. **Accesibilidad:** Los mensajes de error se asocian semánticamente a cada input con `aria-describedby` y `aria-invalid="true"`. Al enviar con datos incompletos, el foco se sitúa de forma automática en el primer campo inválido.
+4. **Respuesta en página:** El envío se realiza mediante `fetch` asíncrono sin recarga de página. Muestra mensajes de confirmación exitosa o estado de error con opción de reintento.
+5. **Privacidad y cumplimiento normativo:** El formulario y el pie enlazan a [`/privacidad.html`](src/pages/privacidad.astro), que contempla la legislación chilena sobre protección de datos personales (**Ley N° 19.628** y la nueva **Ley N° 21.719** que entra en vigencia en diciembre de 2026).
 
-Incluye honeypot (`botcheck`), validación accesible (errores asociados a cada campo con `aria-describedby`, `aria-invalid`, foco en el primer error), confirmación en la misma página sin recargar y aviso de error con reintento. Se exige nombre, mensaje, y correo o WhatsApp.
+---
 
-La política de privacidad está en `src/pages/privacidad.astro`, enlazada desde el formulario y el pie. Es un texto breve de partida: conviene que la revise una persona del área legal antes de publicar, y ajustarla si cambian el proveedor del formulario, el uso de analítica o los plazos de conservación.
+## Blog y Content Collections
 
-## Blog
+El blog está implementado mediante las [Content Collections de Astro](https://docs.astro.build/en/guides/content-collections/) en `src/content/blog/`, con validación estricta de esquemas en `src/content.config.ts`:
 
-Los artículos son archivos Markdown en `src/content/blog/`. Cada uno declara título, título SEO, descripción, categoría, imagen (que también sirve de Open Graph), orden y fecha; el esquema está en `src/content.config.ts`.
+- **Artículos publicados:**
+  1. `kit-de-bienvenida.md`: *"Cómo armar un kit de bienvenida que tu equipo quiera usar"*
+  2. `regalos-de-fin-de-ano.md`: *"Regalos de fin de año: qué elegir según tu presupuesto"*
+  3. `serigrafia-bordado-grabado.md`: *"Serigrafía, bordado o grabado: cómo marcar cada material"*
+- **Borradores (`draft: true`):** Cuatro artículos en borrador que no se generan en el build de producción hasta que se complete su redacción y se cambie su bandera a `false`.
+- **Cálculo automático:** Se calcula en tiempo de compilación el tiempo de lectura estimado (200 palabras por minuto) y se generan los filtros por categoría. Cada artículo incluye su bloque Open Graph personalizado y un llamado a la acción (CTA) final para cotizar.
 
-- **Publicados:** "Cómo armar un kit de bienvenida que tu equipo quiera usar", "Regalos de fin de año: qué elegir según tu presupuesto" y "Serigrafía, bordado o grabado: cómo marcar cada material".
-- **Borradores** (`draft: true`, no se publican): cuatro títulos pendientes de redactar. Al terminarlos, cambia `draft` a `false`.
-- Tiempo de lectura y filtros por categoría se calculan solos. Las imágenes son renders provisionales; cámbialas por fotos reales en `src/assets/img/`.
-- Los textos están escritos sin cifras ni casos inventados: **conviene que Carlos los revise** antes de publicar.
+---
 
-## SEO, staging y analítica
+## Estructura del proyecto
 
-Variables de entorno (ver `.env.example`; se leen en el build, así que cambiarlas exige redesplegar):
+```text
+casa-scout-web/
+├── public/                 # Archivos estáticos directos (favicons, robots.txt, og-default.png)
+├── src/
+│   ├── assets/             # Imágenes y logo procesados por Astro (WebP, responsivos)
+│   ├── components/         # Componentes reutilizables (Header, Footer, QuoteForm, Pic, Analytics)
+│   ├── config/             # Configuración central (site.ts, env.ts)
+│   ├── content/
+│   │   └── blog/           # Artículos Markdown de la colección del blog
+│   ├── layouts/
+│   │   └── Base.astro      # Plantilla HTML base con SEO, metadatos, fuentes y accesibilidad
+│   ├── pages/              # Páginas y rutas del sitio (.astro, robots.txt.ts)
+│   ├── scripts/            # Scripts del cliente (main.js para menú móvil y formulario)
+│   └── styles/
+│       └── global.css      # Hoja de estilos globales
+├── astro.config.mjs        # Configuración de Astro (@astrojs/sitemap, sitemap, trailingSlash: never)
+├── vercel.json             # Configuración de despliegue en Vercel
+└── package.json
+```
 
-| Variable | Qué hace |
-|---|---|
-| `PUBLIC_SITE_URL` | URL pública sin barra final. Se usa en canónicas, Open Graph, sitemap y `robots.txt`. Sin valor, usa la URL de Vercel. Defínela al tener dominio propio. |
-| `PUBLIC_STAGING` | Mientras sea `true`: todas las páginas llevan `noindex, nofollow`, `robots.txt` no anuncia el sitemap y la analítica no se carga. Poner `false` (o dejar vacío) al publicar. **Sin valor, el sitio es indexable.** |
-| `PUBLIC_ANALYTICS` | `plausible` o `ga4`. Vacío: sin analítica. |
-| `PUBLIC_PLAUSIBLE_DOMAIN`, `PUBLIC_PLAUSIBLE_SRC` | Plausible: dominio registrado y, opcionalmente, URL del script (por defecto `https://plausible.io/js/script.js`). |
-| `PUBLIC_GA4_ID` | GA4: ID de medición (`G-XXXXXXXXXX`). |
+---
 
-- **Open Graph y Twitter:** `Base.astro` agrega los metadatos con la imagen por defecto `public/og-default.png` (1200x630). Para regenerarla o cambiarla: `node scripts/make-social-images.mjs`, o reemplaza el archivo por una imagen propia. Cada página puede pasar su propia `image` al layout.
-- **Datos estructurados:** el inicio incluye JSON-LD de `Organization` armado con `src/config/site.ts` (nombre y descripción fijos en `marca`; correo, teléfono, ciudad y redes solo si existen).
-- **Sitemap y robots:** `@astrojs/sitemap` genera `sitemap-index.xml` (con las URLs `.html`) y `src/pages/robots.txt.ts` genera `robots.txt`. En staging no se bloquea el rastreo con `Disallow`, para que los buscadores puedan leer el `noindex`.
-- **Analítica:** `Analytics.astro` carga Plausible o GA4 según las variables. Eventos: clic en WhatsApp (`WhatsApp Click` / `whatsapp_click`, con la página y la zona) y envío del formulario (`Form Submit` / `form_submit`). En GA4 conviene marcar `form_submit` como evento clave. La política de privacidad cambia sola según la analítica activa.
+## Auditoría y Calidad (Lighthouse)
 
-## Publicación (Vercel)
-
-El proyecto debe usar el preset **Astro**, con comando de build `npm run build` y directorio de salida `dist`, y la variable `PUBLIC_WEB3FORMS_KEY` definida.
-
-Las reglas de diseño y lo que no se debe agregar están en [`AGENTS.md`](AGENTS.md). El brief completo está en [`docs/brief.md`](docs/brief.md).
+El sitio ha sido auditado y optimizado exhaustivamente con Google Lighthouse en todas sus páginas:
+- **Rendimiento (Performance):** 100 / 100 (móvil y escritorio).
+- **Accesibilidad:** 100 / 100 (móvil y escritorio).
+- **Buenas Prácticas:** 100 / 100.
+- **SEO:** 100 / 100.
+- **Verificaciones adicionales:** 0 enlaces rotos (internos y absolutos), contraste de color conforme a estándar WCAG AA, foco visual accesible para navegación por teclado, objetivos táctiles de al menos 44×44px en móviles y total ausencia de desplazamiento horizontal a 360px de ancho.

@@ -25,7 +25,7 @@ const filtros = categorias.filter((c) => articulos.some((a) => a.data.category =
     destacado && (
       <section class="featured grid" aria-labelledby="b-feat">
         <figure class="ph rv">
-          <Pic src={destacado.data.image} alt={destacado.data.imageAlt} sizes="(max-width: 820px) 100vw, 58vw" />
+          <Pic src={destacado.data.image} alt={destacado.data.imageAlt} sizes="(max-width: 820px) 100vw, 58vw" loading="eager" />
           <span class="tag">Render provisional</span>
         </figure>
         <div class="t rv2">

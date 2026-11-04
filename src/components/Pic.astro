@@ -8,10 +8,12 @@ interface Props {
   /** Atributo sizes: ancho real que ocupa la imagen según el viewport. */
   sizes: string;
   loading?: 'lazy' | 'eager';
+  /** "high" para la imagen principal de la primera pantalla (mejora el LCP). */
+  fetchpriority?: 'high' | 'low' | 'auto';
   style?: string;
 }
 
-const { src, alt, sizes, loading = 'lazy', style } = Astro.props;
+const { src, alt, sizes, loading = 'lazy', fetchpriority, style } = Astro.props;
 ---
 
 <Image
@@ -23,5 +25,6 @@ const { src, alt, sizes, loading = 'lazy', style } = Astro.props;
   sizes={sizes}
   loading={loading}
   decoding="async"
+  fetchpriority={fetchpriority}
   style={style}
 />

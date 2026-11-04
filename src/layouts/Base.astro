@@ -6,6 +6,9 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Analytics from '../components/Analytics.astro';
+import bricolage400 from '@fontsource/bricolage-grotesque/files/bricolage-grotesque-latin-400-normal.woff2?url';
+import dmSans400 from '@fontsource/dm-sans/files/dm-sans-latin-400-normal.woff2?url';
+import dmSans600 from '@fontsource/dm-sans/files/dm-sans-latin-600-normal.woff2?url';
 import { staging } from '../config/env';
 import { site, marca } from '../config/site';
 
@@ -79,6 +82,9 @@ const orgJson = JSON.stringify(orgData).replace(/</g, '\\u003c');
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="preload" href={bricolage400} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={dmSans400} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={dmSans600} as="font" type="font/woff2" crossorigin />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
@@ -106,8 +112,11 @@ const orgJson = JSON.stringify(orgData).replace(/</g, '\\u003c');
   </head>
   <body>
     <div class={`cv ${pageClass}`}>
+      <a class="skip" href="#contenido">Saltar al contenido</a>
       <Header current={current} />
-      <slot />
+      <main id="contenido" tabindex="-1">
+        <slot />
+      </main>
       <Footer />
     </div>
     <script>
