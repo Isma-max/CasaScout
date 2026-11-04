@@ -17,11 +17,27 @@ interface Props {
   current?: 'somos' | 'que-hacemos' | 'clientes-y-proyectos' | 'blog' | 'contacto';
   /** Imagen para compartir (ruta en public/). Por defecto, la imagen de la marca. */
   image?: string;
+  /** Texto alternativo de la imagen para compartir. */
+  imageAlt?: string;
+  /** Tipo Open Graph: "website" (por defecto) o "article". */
+  ogType?: 'website' | 'article';
+  /** Fecha de publicación (solo artículos). */
+  publishedTime?: Date;
   /** Incluye los datos estructurados de Organization (se usa en el inicio). */
   organization?: boolean;
 }
 
-const { title, description, pageClass, current, image = marca.imagen, organization = false } = Astro.props;
+const {
+  title,
+  description,
+  pageClass,
+  current,
+  image = marca.imagen,
+  imageAlt = marca.imagenAlt,
+  ogType = 'website',
+  publishedTime,
+  organization = false,
+} = Astro.props;
 
 // URLs absolutas: canónica sin "index.html" y recursos con el dominio del sitio.
 const origin = Astro.site ?? new URL(Astro.url.origin);
@@ -68,7 +84,8 @@ const orgJson = JSON.stringify(orgData).replace(/</g, '\\u003c');
     <link rel="sitemap" href="/sitemap-index.xml" />
     {staging && <meta name="robots" content="noindex, nofollow" />}
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
     <meta property="og:locale" content="es_CL" />
     <meta property="og:site_name" content={marca.nombre} />
     <meta property="og:title" content={title} />
@@ -77,12 +94,12 @@ const orgJson = JSON.stringify(orgData).replace(/</g, '\\u003c');
     <meta property="og:image" content={imageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={marca.imagenAlt} />
+    <meta property="og:image:alt" content={imageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageUrl} />
-    <meta name="twitter:image:alt" content={marca.imagenAlt} />
+    <meta name="twitter:image:alt" content={imageAlt} />
 
     {organization && <script type="application/ld+json" set:html={orgJson} />}
     <Analytics />

@@ -15,7 +15,8 @@ Requiere Node 22.23 o superior.
 
 ## Estructura
 
-- `src/pages/`: las seis páginas y `privacidad.astro` (política de privacidad).
+- `src/pages/`: las seis páginas, `privacidad.astro` (política de privacidad) y `blog/[slug].astro` (una página por artículo).
+- `src/content/blog/`: artículos en Markdown (content collection). Ver "Blog" abajo.
 - `src/layouts/Base.astro`: layout base (`title`, `description`, `pageClass`), con encabezado, pie, fuentes y JS.
 - `src/components/`: `Header`, `Footer`, `WhatsAppButton`, `QuoteForm` (formulario de cotización), `Analytics` y `Pic` (envoltorio de `<Image>`).
 - `src/config/site.ts`: datos pendientes (ver abajo). `src/config/env.ts`: variables de entorno.
@@ -45,7 +46,7 @@ Ojo: sin `whatsapp` no se muestra la tarjeta "Por WhatsApp", y sin la clave de W
 4. Proyectos reales para la grilla de Clientes y proyectos.
 5. Zonas de despacho y plazo de respuesta.
 6. Crear la cuenta de Web3Forms con el correo de Casa Scout y cargar la clave (ver abajo).
-7. Redactar los artículos del blog. Los títulos actuales son propuestas para SEO.
+7. Redactar los cuatro artículos del blog que siguen como borrador y validar con Carlos los tres publicados.
 8. Reemplazar `public/og-default.png` por una imagen con fotos reales, definir `PUBLIC_SITE_URL` y pasar `PUBLIC_STAGING` a `false` al publicar.
 
 ## Formulario de cotización (Web3Forms)
@@ -61,6 +62,15 @@ El formulario de Inicio y Contacto (`src/components/QuoteForm.astro`, lógica en
 Incluye honeypot (`botcheck`), validación accesible (errores asociados a cada campo con `aria-describedby`, `aria-invalid`, foco en el primer error), confirmación en la misma página sin recargar y aviso de error con reintento. Se exige nombre, mensaje, y correo o WhatsApp.
 
 La política de privacidad está en `src/pages/privacidad.astro`, enlazada desde el formulario y el pie. Es un texto breve de partida: conviene que la revise una persona del área legal antes de publicar, y ajustarla si cambian el proveedor del formulario, el uso de analítica o los plazos de conservación.
+
+## Blog
+
+Los artículos son archivos Markdown en `src/content/blog/`. Cada uno declara título, título SEO, descripción, categoría, imagen (que también sirve de Open Graph), orden y fecha; el esquema está en `src/content.config.ts`.
+
+- **Publicados:** "Cómo armar un kit de bienvenida que tu equipo quiera usar", "Regalos de fin de año: qué elegir según tu presupuesto" y "Serigrafía, bordado o grabado: cómo marcar cada material".
+- **Borradores** (`draft: true`, no se publican): cuatro títulos pendientes de redactar. Al terminarlos, cambia `draft` a `false`.
+- Tiempo de lectura y filtros por categoría se calculan solos. Las imágenes son renders provisionales; cámbialas por fotos reales en `src/assets/img/`.
+- Los textos están escritos sin cifras ni casos inventados: **conviene que Carlos los revise** antes de publicar.
 
 ## SEO, staging y analítica
 

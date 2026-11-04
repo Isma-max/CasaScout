@@ -2,24 +2,12 @@
 import Base from '../layouts/Base.astro';
 import Pic from '../components/Pic.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
-import kit from '../assets/img/kit.webp';
+import { articulosPublicados, categorias, minutosLectura, nombreCategoria, urlArticulo } from '../lib/blog';
 
-const filtros = [
-  { id: 'todo', t: 'Todos' },
-  { id: 'kits', t: 'Kits de bienvenida' },
-  { id: 'regalos', t: 'Regalos corporativos' },
-  { id: 'merch', t: 'Merchandising' },
-  { id: 'branding', t: 'Branding en productos' },
-  { id: 'calidad', t: 'Calidad y diseño' },
-];
-const articulos = [
-  { cat: 'regalos', m: 'Regalos corporativos', t: 'Regalos de fin de año: qué elegir según tu presupuesto', min: '5 min', d: 'Opciones para distintos montos, sin perder calidad.' },
-  { cat: 'branding', m: 'Branding en productos', t: 'Serigrafía, bordado o grabado: cómo marcar cada material', min: '7 min', d: 'Qué técnica conviene a cada producto y por qué.' },
-  { cat: 'calidad', m: 'Calidad y diseño', t: 'Productos que representan a tu organización: por qué importa la calidad', min: '4 min', d: 'Un regalo mal elegido también comunica.' },
-  { cat: 'merch', m: 'Merchandising', t: 'Merchandising para colegios: pins, insignias y regalos con identidad', min: '5 min', d: 'Ideas para comunidades escolares y aniversarios.' },
-  { cat: 'kits', m: 'Kits de bienvenida', t: 'Qué poner en un kit de bienvenida según el tipo de empresa', min: '6 min', d: 'Ejemplos para oficinas, terreno y trabajo remoto.' },
-  { cat: 'merch', m: 'Merchandising', t: 'Merchandising para eventos: cómo calcular cantidades y plazos', min: '5 min', d: 'Una guía para no quedarse corto ni pasarse.' },
-];
+const articulos = await articulosPublicados();
+const destacado = articulos.find((a) => a.data.featured) ?? articulos[0];
+// Solo se muestran los filtros de categorías que tienen artículos publicados.
+const filtros = categorias.filter((c) => articulos.some((a) => a.data.category === c.id));
 ---
 
 <Base
@@ -33,39 +21,49 @@ const articulos = [
     <p class="lead">Guías para elegir regalos y merchandising que representen bien a tu organización.</p>
   </section>
 
-  <section class="featured grid" aria-labelledby="b-feat">
-    <figure class="ph rv">
-      <Pic src={kit} alt="Kit de bienvenida abierto" sizes="(max-width: 820px) 100vw, 58vw" />
-      <span class="tag">Render provisional</span>
-    </figure>
-    <div class="t rv2">
-      <span class="k">Kits de bienvenida · 6 min de lectura</span>
-      <h2 id="b-feat"><a href="#b-feat">Cómo armar un kit de bienvenida que tu equipo quiera usar</a></h2>
-      <p>Qué incluir, cómo elegir según el presupuesto y por qué el primer día deja una impresión que dura.</p>
-      <a class="link" href="#b-feat"><span>Leer el artículo</span> →</a>
-    </div>
-  </section>
+  {
+    destacado && (
+      <section class="featured grid" aria-labelledby="b-feat">
+        <figure class="ph rv">
+          <Pic src={destacado.data.image} alt={destacado.data.imageAlt} sizes="(max-width: 820px) 100vw, 58vw" />
+          <span class="tag">Render provisional</span>
+        </figure>
+        <div class="t rv2">
+          <span class="k">{nombreCategoria(destacado.data.category)} · {minutosLectura(destacado)} min de lectura</span>
+          <h2 id="b-feat"><a href={urlArticulo(destacado)}>{destacado.data.title}</a></h2>
+          <p>{destacado.data.description}</p>
+          <a class="link" href={urlArticulo(destacado)}><span>Leer el artículo</span> →</a>
+        </div>
+      </section>
+    )
+  }
 
-  <section class="posts grid" aria-labelledby="b-all">
-    <div class="h rv"><h2 id="b-all">Todos los artículos</h2>
-      <div class="filters" role="group" aria-label="Filtrar por tema">
-        {filtros.map((f) => <button class="chip" type="button" data-filter={f.id} aria-pressed={f.id === 'todo' ? 'true' : 'false'}>{f.t}</button>)}
-      </div>
-    </div>
-    <ul class="plist" data-filter-list>
-      {
-        articulos.map((a) => (
-          <li data-cat={a.cat}><a href="#b-all"><span class="m">{a.m}</span><span class="t">{a.t}</span><span class="m">{a.min}</span><span class="ar" aria-hidden="true">→</span><span class="d">{a.d}</span></a></li>
-        ))
-      }
-    </ul>
-    <p class="note small">Títulos propuestos para posicionamiento en Google.</p>
-  </section>
+  {
+    articulos.length > 0 && (
+      <section class="posts grid" aria-labelledby="b-all">
+        <div class="h rv"><h2 id="b-all">Todos los artículos</h2>
+          {articulos.length > 1 && (
+            <div class="filters" role="group" aria-label="Filtrar por tema">
+              <button class="chip" type="button" data-filter="todo" aria-pressed="true">Todos</button>
+              {filtros.map((f) => <button class="chip" type="button" data-filter={f.id} aria-pressed="false">{f.label}</button>)}
+            </div>
+          )}
+        </div>
+        <ul class="plist" data-filter-list>
+          {
+            articulos.map((a) => (
+              <li data-cat={a.data.category}><a href={urlArticulo(a)}><span class="m">{nombreCategoria(a.data.category)}</span><span class="t">{a.data.title}</span><span class="m">{minutosLectura(a)} min</span><span class="ar" aria-hidden="true">→</span><span class="d">{a.data.description}</span></a></li>
+            ))
+          }
+        </ul>
+      </section>
+    )
+  }
 
   <section class="sub grid" aria-labelledby="b-sub">
     <div class="t rv"><h2 id="b-sub">¿Tienes una fecha cerca?</h2><p class="lead">Te ayudamos a elegir y a llegar a tiempo.</p></div>
     <div class="acts rv2">
-      <a class="btn" href="contacto.html">Solicitar cotización</a>
+      <a class="btn" href="/contacto.html">Solicitar cotización</a>
       <WhatsAppButton ghost label="Conversar por WhatsApp" />
     </div>
   </section>

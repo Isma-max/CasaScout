@@ -11,7 +11,11 @@ src/pages/index.astro                  Inicio
 src/pages/somos.astro                  Somos (historia, por qué Casa Scout, cómo trabajamos, valores)
 src/pages/que-hacemos.astro            Servicios y productos destacados
 src/pages/clientes-y-proyectos.astro   Logos de clientes, proyecto destacado, grilla filtrable
-src/pages/blog.astro                   Artículo destacado y lista filtrable (temas pensados para SEO)
+src/pages/blog.astro                   Artículo destacado y lista filtrable (lee la colección de blog)
+src/pages/blog/[slug].astro            Una página por artículo publicado (/blog/<slug>.html)
+src/content/blog/*.md                  Artículos en Markdown (content collection; `draft: true` = borrador sin publicar)
+src/content.config.ts                  Esquema de la colección de blog
+src/lib/blog.ts                        Categorías, artículos publicados y tiempo de lectura
 src/pages/contacto.astro               WhatsApp + formulario de cotización
 src/pages/privacidad.astro             Política de privacidad (enlazada desde el formulario y el pie)
 src/layouts/Base.astro                 Layout base: title, description, pageClass; incluye encabezado, pie, fuentes, JS, metadatos Open Graph/Twitter, canónica, noindex en staging y JSON-LD
@@ -56,6 +60,15 @@ Para agregar un dato nuevo, ocúltalo cuando esté vacío con la misma lógica (
 - Botones rectos: morado sólido, o "ghost" con borde de tinta.
 - Mucho espacio en blanco: separaciones de 160 a 200px entre secciones en escritorio, ~104px en celular.
 - Todos los tokens están como variables CSS en `.cv` al inicio de `src/styles/global.css`.
+
+## Blog (content collection)
+
+- Cada artículo es un `.md` en `src/content/blog/` con `title`, `seoTitle` (60 caracteres o menos, con la marca al final), `description` (120 a 160 caracteres), `category` (`kits`, `regalos`, `merch`, `branding`, `calidad`), `image` e `imageAlt` (también es la imagen Open Graph, recortada a 1200x630), `order`, `date` y, opcionalmente, `featured`.
+- `draft: true` = borrador: no genera página, no aparece en el blog ni en el inicio, y no entra al sitemap. Para publicarlo, redacta el cuerpo y cambia `draft` a `false`.
+- El tiempo de lectura se calcula solo (unas 200 palabras por minuto). Los filtros del blog muestran solo las categorías con artículos publicados.
+- Cada artículo termina con un llamado a cotizar (lo agrega la página, no el Markdown).
+- Estilo editorial: español de Chile, tuteo, tono experto y concreto, entre 800 y 1.200 palabras. Sin cifras, clientes ni casos inventados; si un dato no está confirmado, no se escribe.
+- Los enlaces internos son absolutos (`/somos.html`) porque los artículos viven en `/blog/`.
 
 ## SEO, staging y analítica
 

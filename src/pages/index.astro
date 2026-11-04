@@ -4,6 +4,7 @@ import Pic from '../components/Pic.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
 import QuoteForm from '../components/QuoteForm.astro';
 import { site, waUrl, proyectoDestacado, etiquetasProyectos } from '../config/site';
+import { articulosPublicados, nombreCategoria, urlArticulo } from '../lib/blog';
 import kit from '../assets/img/kit.webp';
 import bottles from '../assets/img/bottles.webp';
 import desk from '../assets/img/desk.webp';
@@ -18,13 +19,7 @@ const columnas = categorias
   .map((c) => ({ categoria: c, items: site.logos.filter((l) => l.categoria === c) }))
   .filter((c) => c.items.length > 0);
 
-const articulos = [
-  { k: 'Kits de bienvenida', t: 'Cómo armar un kit de bienvenida que tu equipo quiera usar' },
-  { k: 'Regalos corporativos', t: 'Regalos de fin de año: qué elegir según tu presupuesto' },
-  { k: 'Branding', t: 'Serigrafía, grabado o bordado: cómo marcar cada material' },
-  { k: 'Merchandising', t: 'Productos que representan a una organización: por qué importa la calidad' },
-  { k: 'Colegios', t: 'Pins, insignias y regalos para comunidades escolares' },
-];
+const articulos = (await articulosPublicados()).slice(0, 5);
 ---
 
 <Base
@@ -59,20 +54,20 @@ const articulos = [
       <div class="head rv"><h2 id="h-svc">Qué hacemos</h2><p class="lead">Cuatro formas de llevar tu marca a objetos que la gente usa y conserva.</p></div>
     </div>
     <div class="band rv2">
-      <a href="que-hacemos.html#merch" style="flex-grow:5">
+      <a href="/que-hacemos.html#merch" style="flex-grow:5">
         <Pic src={bottles} alt="Botellas térmicas en cuatro colores con el logo de un cliente" sizes="(max-width: 820px) 50vw, 36vw" />
         <span class="lbl"><b>Merchandising</b><span>Productos de calidad con tu logo, en la técnica que mejor le queda a cada material.</span></span>
         <span class="tag">Render provisional</span>
       </a>
-      <a href="que-hacemos.html#regalos" style="flex-grow:3">
+      <a href="/que-hacemos.html#regalos" style="flex-grow:3">
         <Pic src={desk} alt="Libreta, lápices y pin personalizados" sizes="(max-width: 820px) 50vw, 22vw" />
         <span class="lbl"><b>Regalos corporativos</b><span>Para clientes, aniversarios y fechas especiales.</span></span>
       </a>
-      <a href="que-hacemos.html#kits" style="flex-grow:3">
+      <a href="/que-hacemos.html#kits" style="flex-grow:3">
         <Pic src={kit} alt="Kit de bienvenida" sizes="(max-width: 820px) 50vw, 22vw" style="object-position:72% 50%" />
         <span class="lbl"><b>Kits de bienvenida</b><span>Una caja propia para recibir a cada persona nueva.</span></span>
       </a>
-      <a href="que-hacemos.html#proyectos-p" style="flex-grow:3">
+      <a href="/que-hacemos.html#proyectos-p" style="flex-grow:3">
         <Pic src={pins} alt="Pins esmaltados con formas propias" sizes="(max-width: 820px) 50vw, 22vw" />
         <span class="lbl"><b>Proyectos personalizados</b><span>Objetos diseñados desde cero para tu organización.</span></span>
       </a>
@@ -87,23 +82,23 @@ const articulos = [
 
   <section class="work" id="proyectos" aria-labelledby="h-work">
     <div class="wh rv"><h2 id="h-work">Clientes y proyectos</h2><p class="lead">Una selección de trabajos.</p></div>
-    <a class="tile t-wide rv" href="clientes-y-proyectos.html">
+    <a class="tile t-wide rv" href="/clientes-y-proyectos.html">
       <div class="ph"><Pic src={scale} alt="Cajas para una campaña de fin de año" sizes="(max-width: 820px) 100vw, 45vw" /></div>
       <div class="cap"><b>Campaña de fin de año</b>{etqCampana && <span>{etqCampana}</span>}</div>
     </a>
-    <a class="tile t-4 rv2" href="clientes-y-proyectos.html">
+    <a class="tile t-4 rv2" href="/clientes-y-proyectos.html">
       <div class="ph"><Pic src={pins} alt="Pins institucionales" sizes="(max-width: 820px) 50vw, 22vw" /></div>
       <div class="cap"><b>Pins institucionales</b>{etiquetasProyectos.pins && <span>{etiquetasProyectos.pins}</span>}</div>
     </a>
-    <a class="tile t-k rv" href="clientes-y-proyectos.html">
+    <a class="tile t-k rv" href="/clientes-y-proyectos.html">
       <div class="ph"><Pic src={kit} alt="Kit de bienvenida" sizes="(max-width: 820px) 100vw, 45vw" /></div>
       <div class="cap"><b>Kit de bienvenida</b>{etiquetasProyectos.kit && <span>{etiquetasProyectos.kit}</span>}</div>
     </a>
-    <a class="tile t-3 rv2" href="clientes-y-proyectos.html">
+    <a class="tile t-3 rv2" href="/clientes-y-proyectos.html">
       <div class="ph"><Pic src={desk} alt="Set de escritorio" sizes="(max-width: 820px) 50vw, 22vw" /></div>
       <div class="cap"><b>Set de escritorio</b>{etiquetasProyectos.escritorio && <span>{etiquetasProyectos.escritorio}</span>}</div>
     </a>
-    <div class="more"><a class="link" href="clientes-y-proyectos.html"><span>Ver todos los proyectos</span> →</a></div>
+    <div class="more"><a class="link" href="/clientes-y-proyectos.html"><span>Ver todos los proyectos</span> →</a></div>
   </section>
 
   {
@@ -123,11 +118,11 @@ const articulos = [
   }
 
   <section class="blog grid" id="blog" aria-labelledby="h-blog">
-    <div class="bh rv"><h2 id="h-blog">Guías para elegir bien</h2><p class="lead">Ideas y criterios para regalar mejor, desde nuestro blog.</p><a class="link" href="blog.html"><span>Ir al blog</span> →</a></div>
+    <div class="bh rv"><h2 id="h-blog">Guías para elegir bien</h2><p class="lead">Ideas y criterios para regalar mejor, desde nuestro blog.</p><a class="link" href="/blog.html"><span>Ir al blog</span> →</a></div>
     <ul class="rv2">
       {
         articulos.map((a) => (
-          <li><a href="blog.html"><span class="k">{a.k}</span><span class="t">{a.t}</span><span class="ar" aria-hidden="true">→</span></a></li>
+          <li><a href={urlArticulo(a)}><span class="k">{nombreCategoria(a.data.category)}</span><span class="t">{a.data.title}</span><span class="ar" aria-hidden="true">→</span></a></li>
         ))
       }
     </ul>

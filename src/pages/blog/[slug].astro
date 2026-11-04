@@ -1,0 +1,63 @@
+---
+import { render } from 'astro:content';
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Pic from '../../components/Pic.astro';
+import WhatsAppButton from '../../components/WhatsAppButton.astro';
+import { articulosPublicados, minutosLectura, nombreCategoria, urlArticulo } from '../../lib/blog';
+
+// Una página por artículo publicado (los borradores no generan página).
+export async function getStaticPaths() {
+  const articulos = await articulosPublicados();
+  return articulos.map((articulo) => ({ params: { slug: articulo.id }, props: { articulo } }));
+}
+
+const { articulo } = Astro.props;
+const { data } = articulo;
+const { Content } = await render(articulo);
+
+// Imagen Open Graph: la imagen del artículo recortada a 1200x630.
+const og = await getImage({ src: data.image, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+---
+
+<Base
+  title={data.seoTitle}
+  description={data.description}
+  pageClass="pg-blog pg-articulo"
+  current="blog"
+  image={og.src}
+  imageAlt={data.imageAlt}
+  ogType="article"
+  publishedTime={data.date}
+>
+  <article>
+    <header class="top grid">
+      <p class="crumb"><a href="/blog.html">← Volver al blog</a></p>
+      <span class="k">{nombreCategoria(data.category)} · {minutosLectura(articulo)} min de lectura</span>
+      <h1>{data.title}</h1>
+      <p class="lead">{data.description}</p>
+    </header>
+
+    <div class="cover grid">
+      <figure class="ph">
+        <Pic src={data.image} alt={data.imageAlt} sizes="(max-width: 820px) 100vw, 90vw" loading="eager" />
+        <span class="tag">Render provisional</span>
+      </figure>
+    </div>
+
+    <div class="body grid">
+      <div class="prose"><Content /></div>
+    </div>
+  </article>
+
+  <section class="sub grid" aria-labelledby="b-sub">
+    <div class="t rv">
+      <h2 id="b-sub">¿Quieres cotizar tu proyecto?</h2>
+      <p class="lead">Cuéntanos qué necesitas y te proponemos opciones.</p>
+    </div>
+    <div class="acts rv2">
+      <a class="btn" href="/contacto.html">Solicitar cotización</a>
+      <WhatsAppButton ghost label="Conversar por WhatsApp" />
+    </div>
+  </section>
+</Base>
