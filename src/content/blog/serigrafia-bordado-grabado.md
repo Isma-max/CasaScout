@@ -35,7 +35,7 @@ La serigrafía aplica la tinta a través de una malla, una pasada por cada color
 - Los degradados y las fotografías no son su fuerte.
 - En pedidos muy pequeños, el costo de preparación pesa más por pieza.
 
-**Un detalle útil:** la tinta de serigrafía sobre textil queda sobre la fibra y con el tiempo puede desgastarse con muchos lavados. Si la prenda se lavará seguido, conviene preguntar por el tipo de tinta y el curado.
+**Un detalle útil:** la durabilidad depende de la tinta y el curado: el plastisol queda sobre la fibra (da una capa con más cuerpo), mientras que la tinta al agua penetra en ella (da un tacto más suave y respira mejor). Si la prenda se lavará seguido, conviene preguntar por estos detalles.
 
 ## Bordado: relieve y duración
 
@@ -81,6 +81,7 @@ No todo se resuelve con las tres técnicas anteriores. Dependiendo del producto,
 - **Impresión UV directa:** imprime a todo color sobre superficies rígidas, como plástico, acrílico o metal. Es buena para logos con muchos colores o degradados.
 - **Sublimación:** transfiere la tinta al material mediante calor, y funciona en poliéster y en productos con recubrimiento especial, como ciertas tazas. El resultado es de colores vivos y muy durable.
 - **Tampografía:** usa un tampón para imprimir sobre superficies curvas o irregulares, como lápices o llaveros.
+- **Transferencia (DTF o vinil):** imprime o recorta el diseño en un soporte intermedio y lo transfiere a la tela mediante calor y presión. Es la alternativa indicada para tiradas cortas, prendas oscuras o logos con degradados y muchos colores en textil.
 
 Conocerlas ayuda a hacer mejores preguntas. A veces la técnica ideal no es la que habías imaginado.
 

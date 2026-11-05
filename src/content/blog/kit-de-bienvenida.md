@@ -87,8 +87,6 @@ Un kit no termina cuando se elige el contenido. Hay que pensar en cómo se arma,
 
 ## Errores que se repiten
 
-Algunos errores se repiten:
-
 - Elegir los productos antes de definir a quién van dirigidos.
 - Llenar la caja con piezas de poco uso.
 - Marcar todo con un logo enorme.
